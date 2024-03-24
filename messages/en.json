@@ -1,9 +1,9 @@
 {
-  "index": {
+  "Index": {
     "title": "Hello world"
   },
 
-  "footer": {
+  "Footer": {
     "h2": "English footer"
   }
 }

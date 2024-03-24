@@ -26,7 +26,7 @@ export default function RootLayout({
     <html lang={locale}>
       <body className={inter.className}>
         <Header />
-        {children}
+        <main className='bg-lightMode-bgPrimary'>{children}</main>
         <Footer />
       </body>
     </html>
