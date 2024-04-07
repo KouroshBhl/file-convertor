@@ -1,47 +1,78 @@
-import { formatAllConversions } from '@/utils/helpers/convertAPIFormat';
+import {
+  formatAllConversions,
+  getSupportedFormats,
+} from '@/utils/helpers/convertAPIFormat';
+import FilePicker from '@/components/FilePicker.js';
 
 import { convertAPIVersion, converAPIDomain } from '@/utils/domains';
+import { locales } from '@/i18n';
+import Form from '@/components/Form';
+import Button from '@/components/Button';
+import { convert } from '@/utils/actions';
 
-export default function Page() {
-  // console.log(conversion);
-  return <div>ok</div>;
+type ParamsProps = {
+  params: {
+    slug: string;
+    locale: string;
+  };
+};
+
+type GetStatisProps = {
+  params: {
+    slug: string;
+  };
+};
+
+export default function Page({ params }: ParamsProps) {
+  return (
+    <div>
+      <h1>{params.slug}</h1>
+      <Form action={convert}>
+        <FilePicker />
+        <Button isSelector={true} name='Add File' />
+      </Form>
+    </div>
+  );
 }
 
-// export async function getStaticPaths() {
-//   const response = await fetch(
-//     `https://${convertAPIVersion}.${converAPIDomain}/info`
-//   );
-//   const data = await response.json();
+export async function getStaticPaths() {
+  const response = await fetch(
+    `https://${convertAPIVersion}.${converAPIDomain}/info`
+  );
+  const data = await response.json();
 
-//   const conversionFormat = data.map((item: any, i: any) => {
-//     return { from: item.SourceFileFormats, to: item.DestinationFileFormats };
-//   });
+  const supportedFormats = getSupportedFormats(data, true, true);
 
-//   const formatedAllConversions = conversionFormat.reduce(
-//     (acc: any, item: any) => {
-//       return acc + formatAllConversions(item);
-//     },
-//     []
-//   );
+  const formatedAllConversions = supportedFormats.reduce(
+    (acc: any, item: any) => {
+      return acc + formatAllConversions(item);
+    },
+    []
+  );
 
-//   const formatedAllConversionsArray = formatedAllConversions.split(',');
-//   const paths = formatedAllConversionsArray.map((conversion: string) => ({
-//     params: { id: conversion },
-//   }));
+  const formatedAllConversionsArray = formatedAllConversions.split(',');
+  // const paths = formatedAllConversionsArray.map((conversion: string) => ({
+  //   params: { slug: conversion, locale: 'id' },
+  // }));
 
-//   return { paths, fallback: false };
-// }
+  const paths = [];
+  for (const locale of locales) {
+    for (const conversion of formatedAllConversionsArray) {
+      paths.push({ params: { slug: conversion, locale: locale } });
+    }
+  }
 
-// export async function getStatisProps({ params }: any) {
-//   console.log(params);
+  return { paths, fallback: false };
+}
 
-//   const res = await fetch(
-//     `https://${convertAPIVersion}.${converAPIDomain}/${params.id.replaceAll(
-//       '-',
-//       '/'
-//     )}`
-//   );
-//   const conversion = await res.json();
+export async function getStatisProps({ params }: GetStatisProps) {
+  const res = await fetch(
+    `https://${convertAPIVersion}.${converAPIDomain}/${params.slug.replaceAll(
+      '-',
+      '/'
+    )}`
+  );
+  const conversion = await res.json();
 
-//   return { props: { conversion } };
-// }
+  return { props: { conversion } };
+}

@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+});
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -24,9 +28,11 @@ export default function RootLayout({
 }: Readonly<RootLayoutProps>) {
   return (
     <html lang={locale}>
-      <body className={inter.className}>
+      <body
+        className={`${plusJakarta.className} text-theme-fontDark font-normal`}
+      >
         <Header />
-        <main className='bg-lightMode-bgPrimary'>{children}</main>
+        {children}
         <Footer />
       </body>
     </html>
