@@ -1,10 +1,9 @@
 'use client';
 
+import path from 'path';
 import React, { useRef, useState } from 'react';
-import Button from './Button';
 import FileList from './FileList';
 import { getConvertorFormats } from '@/utils/actions';
-import getFormat from '../utils/helpers/getFormat';
 
 export default function FilePicker() {
   const [pickedFiles, setPickedFiles] = useState([]);
@@ -15,26 +14,23 @@ export default function FilePicker() {
     console.log(pickedFiles);
   }
 
-  function handlePickedFile(e) {
+  async function handlePickedFile(e) {
     const file = e.target?.files[0];
-    console.log(file);
 
     if (!file) return;
 
-    const fileType = getFormat(file);
+    // const fileType = file.name.split('.')[1];
+    const fileType = path.extname(file.name).split('.')[1];
+
+    const supported = await getConvertorFormats(fileType);
 
     setPickedFiles((prevFiles) => {
-      return [...prevFiles, file];
+      return [
+        ...prevFiles,
+        { fileDetail: file, supportedFormats: supported, type: fileType },
+      ];
     });
-
-    // const fileReader: any = new FileReader();
-
-    // fileReader.onload = () => {
-    //   setPickedImg(fileReader.result);
-    // };
-
-    // fileReader.readAsDataURL(file);
-    // console.log(pickedImg);
+    console.log(pickedFiles);
   }
 
   return (
@@ -48,12 +44,14 @@ export default function FilePicker() {
       {pickedFiles.length !== 0 && (
         <ul className='flex flex-col gap-4'>
           {pickedFiles.map((file) => {
+            const { fileDetail, supportedFormats, type } = file;
             return (
               <FileList
-                key={file.lastModified}
-                name={file.name}
-                size={file.size}
-                type={file.type}
+                key={fileDetail.lastModified}
+                name={fileDetail.name}
+                size={fileDetail.size}
+                supportedFormats={supportedFormats}
+                type={type}
               />
             );
           })}

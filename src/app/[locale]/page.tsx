@@ -11,11 +11,11 @@ export default function Home() {
   // const t = useTranslations('Index');
   return (
     <div>
-      <Form action={convert}>
+      {/* <Form action={convert}>
         <Heading title='File Convertor!' />
         <FilePicker />
         <Button name='Choose File' isSelector={true}></Button>
-      </Form>
+      </Form> */}
     </div>
   );
 }

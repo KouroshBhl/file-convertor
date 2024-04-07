@@ -27,10 +27,10 @@ export default function Page({ params }: ParamsProps) {
   return (
     <div>
       <h1>{params.slug}</h1>
-      <Form action={convert}>
+      {/* <Form action={convert}>
         <FilePicker />
         <Button isSelector={true} name='Add File' />
-      </Form>
+      </Form> */}
     </div>
   );
 }
@@ -50,7 +50,9 @@ export async function getStaticPaths() {
     []
   );
 
-  const formatedAllConversionsArray = formatedAllConversions.split(',');
+  const formatedAllConversionsArray = formatedAllConversions
+    .split(',')
+    .slice(0, -1);
   // const paths = formatedAllConversionsArray.map((conversion: string) => ({
   //   params: { slug: conversion, locale: 'id' },
   // }));

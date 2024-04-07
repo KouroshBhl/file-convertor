@@ -1,6 +1,10 @@
 'use server';
 
-import { getSupportedFormats } from './helpers/convertAPIFormat';
+import { redirect } from 'next/navigation';
+import {
+  formatSomeConversions,
+  getSupportedFormats,
+} from './helpers/convertAPIFormat';
 
 type ConvertProps = {
   requestUrl: string;
@@ -15,7 +19,6 @@ export async function convert({ requestUrl }: ConvertProps) {
 }
 
 export async function getConvertorFormats(convertFrom: any) {
-  console.log(convertFrom);
   const response = await fetch(
     `https://v2.convertapi.com/info/${convertFrom}/to/*`
   );
@@ -23,5 +26,12 @@ export async function getConvertorFormats(convertFrom: any) {
   const data = await response.json();
 
   const formated = getSupportedFormats(data, false, true);
-  return formated;
+
+  const formatToConversion = formatSomeConversions(formated);
+
+  return formatToConversion;
+}
+
+export async function redirectToSubPage(from: string, to: string) {
+  redirect(`${from}-to-${to}`);
 }

@@ -3,6 +3,11 @@ import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import Form from '@/components/Form';
+import Heading from '@/components/Heading';
+import Button from '@/components/Button';
+import FilePicker from '@/components/FilePicker.js';
+import { convert } from '@/utils/actions';
 
 const inter = Inter({ subsets: ['latin'] });
 const plusJakarta = Plus_Jakarta_Sans({
@@ -32,6 +37,11 @@ export default function RootLayout({
         className={`${plusJakarta.className} text-theme-fontDark font-normal`}
       >
         <Header />
+        <Form action={convert}>
+          <Heading title='File Convertor!' />
+          <FilePicker />
+          <Button name='Choose File' isSelector={true}></Button>
+        </Form>
         {children}
         <Footer />
       </body>

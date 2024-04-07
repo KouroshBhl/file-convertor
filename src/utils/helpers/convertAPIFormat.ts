@@ -18,3 +18,11 @@ export function formatAllConversions(data: any) {
 
   return arr;
 }
+
+export function formatSomeConversions(data: any) {
+  const formatedAllConversions = data.reduce((acc: any, item: any) => {
+    return acc + item.to + ',';
+  }, []);
+
+  return formatedAllConversions.split(',').slice(0, -1);
+}
