@@ -37,12 +37,13 @@ export default function RootLayout({
         className={`${plusJakarta.className} text-theme-fontDark font-normal`}
       >
         <Header />
-        <Form action={convert}>
-          <Heading title='File Convertor!' />
-          <FilePicker />
-          <Button name='Choose File' isSelector={true}></Button>
-        </Form>
-        {children}
+
+        <main className='relative'>
+          <Form action={convert}>
+            <FilePicker />
+          </Form>
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

@@ -8,7 +8,8 @@ import { convertAPIVersion, converAPIDomain } from '@/utils/domains';
 import { locales } from '@/i18n';
 import Form from '@/components/Form';
 import Button from '@/components/Button';
-import { convert } from '@/utils/actions';
+import { convert, getAllConversions } from '@/utils/actions';
+import Heading from '@/components/Heading';
 
 type ParamsProps = {
   params: {
@@ -24,9 +25,12 @@ type GetStatisProps = {
 };
 
 export default function Page({ params }: ParamsProps) {
+  const formatParamSlug = params.slug.split('-');
   return (
     <div>
-      <h1>{params.slug}</h1>
+      <Heading>
+        {formatParamSlug[0].toUpperCase()} to {formatParamSlug[2].toUpperCase()}
+      </Heading>
       {/* <Form action={convert}>
         <FilePicker />
         <Button isSelector={true} name='Add File' />
@@ -36,30 +40,17 @@ export default function Page({ params }: ParamsProps) {
 }
 
 export async function getStaticPaths() {
-  const response = await fetch(
-    `https://${convertAPIVersion}.${converAPIDomain}/info`
-  );
-  const data = await response.json();
+  const formatedAllConversionsArray = await getAllConversions(true, true);
 
-  const supportedFormats = getSupportedFormats(data, true, true);
+  const formatedArray = formatedAllConversionsArray.split(',').slice(0, -1);
 
-  const formatedAllConversions = supportedFormats.reduce(
-    (acc: any, item: any) => {
-      return acc + formatAllConversions(item);
-    },
-    []
-  );
-
-  const formatedAllConversionsArray = formatedAllConversions
-    .split(',')
-    .slice(0, -1);
   // const paths = formatedAllConversionsArray.map((conversion: string) => ({
   //   params: { slug: conversion, locale: 'id' },
   // }));
 
   const paths = [];
   for (const locale of locales) {
-    for (const conversion of formatedAllConversionsArray) {
+    for (const conversion of formatedArray) {
       paths.push({ params: { slug: conversion, locale: locale } });
     }
   }

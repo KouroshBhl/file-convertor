@@ -2,9 +2,11 @@
 
 import { redirect } from 'next/navigation';
 import {
+  formatAllConversions,
   formatSomeConversions,
   getSupportedFormats,
 } from './helpers/convertAPIFormat';
+import { converAPIDomain, convertAPIVersion } from './domains';
 
 type ConvertProps = {
   requestUrl: string;
@@ -25,13 +27,28 @@ export async function getConvertorFormats(convertFrom: any) {
 
   const data = await response.json();
 
-  const formated = getSupportedFormats(data, false, true);
+  const formated = getSupportedFormats(data, false, true, false);
 
   const formatToConversion = formatSomeConversions(formated);
 
   return formatToConversion;
 }
 
-export async function redirectToSubPage(from: string, to: string) {
-  redirect(`${from}-to-${to}`);
+export async function getAllConversions(
+  from: boolean,
+  to: boolean,
+  group: boolean = false
+) {
+  const response = await fetch(
+    `https://${convertAPIVersion}.${converAPIDomain}/info`
+  );
+  const data = await response.json();
+
+  const supportedFormats = getSupportedFormats(data, from, to, group);
+
+  const formatedData = supportedFormats.reduce((acc: any, item: any) => {
+    return acc + formatAllConversions(item, group);
+  }, []);
+
+  return formatedData;
 }

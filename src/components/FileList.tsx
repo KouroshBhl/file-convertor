@@ -1,7 +1,8 @@
-import { getConvertorFormats, redirectToSubPage } from '@/utils/actions';
+import { getConvertorFormats } from '@/utils/actions';
 import getFormat from '@/utils/helpers/getFormat';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
+import Link from 'next/link';
 
 type FileListProps = {
   size: number;
@@ -17,8 +18,8 @@ export default function FileList({
   type,
 }: FileListProps) {
   const router = useRouter();
-  function changeUrl() {
-    router.push('png-to-pdf');
+  function changeUrl(from: string, to: string) {
+    router.push(`${from}-to-${to}`);
   }
 
   return (
@@ -27,17 +28,20 @@ export default function FileList({
       <p>{name}</p>
       <div>
         <p>To</p>
-        <select
-          name='convertTo'
+        <div
+          // name='convertTo'
           id='convertTo'
-          // onChange={(e) => redirectToSubPage(type, e.target.value)}
-          onChange={changeUrl}
+          // onChange={(e) => changeUrl(type, e.target.value)}
         >
-          <option value='select'>...</option>
+          {/* <option value='select'>...</option> */}
           {supportedFormats.map((format, i) => {
-            return <option key={i}>{format}</option>;
+            return (
+              <Link key={i} href={`${type}-to-${format}`}>
+                {format}
+              </Link>
+            );
           })}
-        </select>
+        </div>
       </div>
       <p>STATUS</p>
       <p>{size}</p>

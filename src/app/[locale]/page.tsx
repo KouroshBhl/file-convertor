@@ -11,6 +11,7 @@ export default function Home() {
   // const t = useTranslations('Index');
   return (
     <div>
+      <Heading>File Convertor!</Heading>
       {/* <Form action={convert}>
         <Heading title='File Convertor!' />
         <FilePicker />

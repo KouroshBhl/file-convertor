@@ -1,26 +1,50 @@
-import React from 'react';
-import { HiMiniChevronDown } from 'react-icons/hi2';
+import React, { ReactNode } from 'react';
+import { FaGoogleDrive } from 'react-icons/fa';
+import { FaDropbox } from 'react-icons/fa';
+import { FaLink } from 'react-icons/fa6';
 
 type ButtonProps = {
-  name: string;
+  children: ReactNode;
   isSelector: boolean;
+  onClick: () => void;
 };
 
-export default function Button({ name, isSelector }: ButtonProps) {
+export default function Button({ children, isSelector, onClick }: ButtonProps) {
   return (
-    <div className='flex justify-between text-theme-white font-medium'>
+    <div className='flex justify-between text-theme-white font-semibold text-base'>
       <button
         type='button'
-        className='bg-theme-purplePrimary px-8 py-2 hover:bg-theme-accentPurple rounded-l-md transition-all duration-300'
+        className='bg-theme-fontRed_2 px-10 py-4 hover:bg-theme-fontRed_1 rounded-l-md transition-all duration-300'
+        onClick={onClick}
       >
-        {name}
+        {children}
       </button>
 
       {isSelector && (
-        <button className='font-bold bg-theme-purplePrimary px-4 py-2 hover:bg-theme-accentPurple rounded-r-md transition-all duration-300'>
-          <HiMiniChevronDown />
-        </button>
+        <>
+          <LinkButton isRounded={false}>
+            <FaGoogleDrive />
+          </LinkButton>
+          <LinkButton isRounded={false}>
+            <FaDropbox />
+          </LinkButton>
+          <LinkButton isRounded={true}>
+            <FaLink />
+          </LinkButton>
+        </>
       )}
     </div>
+  );
+}
+
+function LinkButton({ children, isRounded }) {
+  return (
+    <button
+      className={`font-bold bg-theme-fontRed px-4 py-2 bg-theme-fontRed_2 hover:bg-theme-fontRed_1 ${
+        isRounded === true ? 'rounded-r-md' : ''
+      } transition-all duration-300`}
+    >
+      {children}
+    </button>
   );
 }
