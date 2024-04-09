@@ -4,6 +4,7 @@ import ConversionPickup from './ConversionPickup';
 import FormatsContainer from './FormatsContainer';
 import Link from 'next/link';
 import { HiMiniChevronDown } from 'react-icons/hi2';
+import FormatLists from './FormatLists';
 
 export default function ConversionFormatsGroup() {
   const [allFormats, setAllFormats] = useState([]);
@@ -52,7 +53,7 @@ export default function ConversionFormatsGroup() {
   const uniqueGroup = [...new Set(groups)];
 
   return (
-    <div className='flex gap-8 items-center'>
+    <div className='flex gap-4 items-center'>
       <div className='flex flex-col relative '>
         <div
           onClick={handleShowFrom}
@@ -66,23 +67,37 @@ export default function ConversionFormatsGroup() {
             uniqueGroup={uniqueGroup}
             allFormats={allFormats}
             setFromFormatDetect={setFromFormatDetect}
+            setShowTo={setShowTo}
+            setShowFrom={setShowFrom}
           />
         )}
       </div>
-      <span>to</span>
+      <b>to</b>
       <div className='flex flex-col relative '>
-        <div onClick={handleShowTo} className='cursor-pointer'>
+        <div
+          onClick={handleShowTo}
+          className='flex justify-center items-center gap-2 cursor-pointer bg-theme-lightGray_2 rounded px-4 py-2'
+        >
           <b>{toFormatDetect.toUpperCase()}</b>
-          <span>/</span>
+          <HiMiniChevronDown />
         </div>
+
         {showTo && (
-          <FormatsContainer>
-            <ul>
+          <FormatsContainer width='[24rem]'>
+            <ul className='grid grid-cols-3'>
               {formatTo.map((format, i) => {
                 return (
-                  <li key={i} onClick={() => setToFormatDetect(format.to)}>
+                  <li
+                    className='flex justify-center items-center bg-theme-darkGray_2 px-1 py-2 m-2 rounded hover:cursor-pointer text-wrap'
+                    key={i}
+                    onClick={() => {
+                      setToFormatDetect(format.to);
+                      setShowFrom(false);
+                      setShowTo(false);
+                    }}
+                  >
                     <Link href={`${fromFormatDetect}-to-${format.to}`}>
-                      {format.to}
+                      {format.to.toUpperCase()}
                     </Link>
                   </li>
                 );

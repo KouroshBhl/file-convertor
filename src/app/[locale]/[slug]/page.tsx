@@ -25,11 +25,11 @@ type GetStatisProps = {
 };
 
 export default function Page({ params }: ParamsProps) {
-  const formatParamSlug = params.slug.split('-');
+  const formatParamSlug = params.slug.split('-to-');
   return (
     <div>
       <Heading>
-        {formatParamSlug[0].toUpperCase()} to {formatParamSlug[2].toUpperCase()}
+        {formatParamSlug[0].toUpperCase()} to {formatParamSlug[1].toUpperCase()}
       </Heading>
       {/* <Form action={convert}>
         <FilePicker />
