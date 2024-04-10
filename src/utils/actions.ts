@@ -21,17 +21,24 @@ export async function convert({ requestUrl }: ConvertProps) {
 }
 
 export async function getConvertorFormats(convertFrom: any) {
-  const response = await fetch(
-    `https://v2.convertapi.com/info/${convertFrom}/to/*`
-  );
+  try {
+    const response = await fetch(
+      `https://v2.convertapi.com/info/${convertFrom}/to/*`
+    );
 
-  const data = await response.json();
+    if (response.status !== 200)
+      throw new Error('Sorry, format is not supported yet!');
 
-  const formated = getSupportedFormats(data, false, true, false);
+    const data = await response.json();
 
-  const formatToConversion = formatSomeConversions(formated);
+    const formated = getSupportedFormats(data, false, true, false);
 
-  return formatToConversion;
+    const formatToConversion = formatSomeConversions(formated);
+
+    return formatToConversion;
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
 export async function getAllConversions(
@@ -39,16 +46,21 @@ export async function getAllConversions(
   to: boolean,
   group: boolean = false
 ) {
-  const response = await fetch(
-    `https://${convertAPIVersion}.${converAPIDomain}/info`
-  );
-  const data = await response.json();
+  try {
+    const response = await fetch(
+      `https://${convertAPIVersion}.${converAPIDomain}/info`
+    );
+    console.log(response);
+    const data = await response.json();
 
-  const supportedFormats = getSupportedFormats(data, from, to, group);
+    const supportedFormats = getSupportedFormats(data, from, to, group);
 
-  const formatedData = supportedFormats.reduce((acc: any, item: any) => {
-    return acc + formatAllConversions(item, group);
-  }, []);
+    const formatedData = supportedFormats.reduce((acc: any, item: any) => {
+      return acc + formatAllConversions(item, group);
+    }, []);
 
-  return formatedData;
+    return formatedData;
+  } catch (error) {
+    console.log('OPS');
+  }
 }

@@ -1,13 +1,20 @@
-import React from 'react';
+import Link from 'next/link';
+import React, { ReactNode } from 'react';
 
-export default function FormatLists({ children, onClick, dataValue }) {
+type FormatLists = {
+  children: ReactNode;
+  onClick?: () => void;
+  to: any;
+};
+
+export default function FormatLists({ children, onClick, to }: FormatLists) {
   return (
-    <li
+    <Link
+      href={to}
       className='flex justify-center items-center bg-theme-darkGray_2 px-1 py-2 m-2 rounded hover:cursor-pointer text-wrap'
       onClick={onClick}
-      data-value={dataValue}
     >
       {children}
-    </li>
+    </Link>
   );
 }

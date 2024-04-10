@@ -2,8 +2,8 @@ import { useState } from 'react';
 import FormatsContainer from './FormatsContainer';
 import Loader from './Loader';
 import { HiMiniChevronRight } from 'react-icons/hi2';
-import { IoIosSearch } from 'react-icons/io';
 import ShowFormatsFrom from './ShowFormatsFrom';
+import SearchFormats from './SearchFormats';
 
 function ConversionPickup({
   uniqueGroup,
@@ -34,40 +34,13 @@ function ConversionPickup({
     return filterByGroup.find((a) => a.from === from);
   });
 
-  function handleSearch(e) {
-    const inputValue = e.target.value;
-    if (!inputValue) setFilterBySearch([]);
-
-    const filterBySearch = allFormats.filter((format) => {
-      // return e.target.value === format.from;
-      // return e.target.value.includes(format.from);
-      return format.from.includes(inputValue);
-    });
-
-    const uniqueFormatsBySearch = Array.from(
-      new Set(filterBySearch.map((a) => a.from))
-    ).map((from) => {
-      return filterBySearch.find((a) => a.from === from);
-    });
-
-    if (inputValue) setFilterBySearch(uniqueFormatsBySearch);
-  }
-
   return (
-    <FormatsContainer width='[32rem]'>
+    <FormatsContainer width='[28rem]'>
       {!uniqueGroup.length ? (
         <Loader />
       ) : (
         <>
-          <div className='flex relative items-center'>
-            <IoIosSearch className='absolute left-2 text-lg' />
-            <input
-              type='text'
-              className='w-full py-2 px-8 bg-theme-bgDark_3 rounded font-bold capitalize '
-              placeholder='Search format'
-              onChange={handleSearch}
-            />
-          </div>
+          <SearchFormats formats={allFormats} setter={setFilterBySearch} />
           {filterBySearch.length !== 0 ? (
             <ShowFormatsFrom
               onClick={handleDetectFormat}

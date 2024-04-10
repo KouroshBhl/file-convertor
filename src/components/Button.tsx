@@ -7,15 +7,24 @@ type ButtonProps = {
   children: ReactNode;
   isSelector: boolean;
   onClick: () => void;
+  disabled: boolean;
 };
 
-export default function Button({ children, isSelector, onClick }: ButtonProps) {
+export default function Button({
+  children,
+  isSelector,
+  onClick,
+  disabled,
+}: ButtonProps) {
   return (
     <div className='flex justify-between text-theme-white font-semibold text-base'>
       <button
         type='button'
-        className='bg-theme-fontRed_2 px-10 py-4 hover:bg-theme-fontRed_1 rounded-l-md transition-all duration-300'
+        className={`bg-theme-fontRed_2 px-10 py-4 hover:bg-theme-fontRed_1 rounded-l-md ${
+          !isSelector ? 'rounded-r-md' : ''
+        } transition-all duration-300 disabled:bg-theme-fontRed_1 disabled:cursor-not-allowed`}
         onClick={onClick}
+        disabled={disabled}
       >
         {children}
       </button>

@@ -29,7 +29,8 @@
     "src/components/FilePicker.js",
     "src/context/FilePickerContext.js",
     "src/context/index.js",
-    "src/components/ConversionFormatsGroup.js"
+    "src/components/ConversionFormatsGroup.js",
+    "src/utils/helpers/getFormat.js"
   ],
   "exclude": ["node_modules"]
 }

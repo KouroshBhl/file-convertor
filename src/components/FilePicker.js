@@ -1,44 +1,92 @@
 'use client';
 
 import path from 'path';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
+
 import ConversionFormatsGroup from './ConversionFormatsGroup.js';
 import FileList from './FileList';
 import { getConvertorFormats } from '@/utils/actions';
 import Button from './Button';
+import Loader from './Loader';
+import SubmitFiles from './SubmitFiles.js';
 
 export default function FilePicker() {
   const [pickedFiles, setPickedFiles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [canUpload, setCanUpload] = useState(false);
   const filePickerRef = useRef(null);
 
   function handlePickClick() {
+    setIsError(false);
     filePickerRef.current.click();
   }
 
   async function handlePickedFile(e) {
-    const file = e.target?.files[0];
+    setIsError(false);
 
-    if (!file) return;
+    try {
+      const file = e.target?.files;
 
-    const fileType = path.extname(file.name).split('.')[1];
+      if (!file) return;
+      setIsLoading(true);
 
-    const supported = await getConvertorFormats(fileType);
+      const ArrayFiles = Array.from(file);
 
-    setPickedFiles((prevFiles) => {
-      return [
-        ...prevFiles,
-        { fileDetail: file, supportedFormats: supported, type: fileType },
-      ];
-    });
+      const fileTypes = ArrayFiles.map(async (file) => {
+        const extname = path.extname(file.name).split('.')[1];
+        const supported = await getConvertorFormats(extname);
+        if (!supported) {
+          toast.error(`Sorry ${extname} format is not supported yet!`, {
+            position: 'top-center',
+            style: {
+              fontSize: '1rem',
+            },
+          });
+          return;
+        }
+        return {
+          file,
+          extname,
+          supported,
+          formatTo: null,
+        };
+      });
+
+      Promise.all(fileTypes).then((values) => {
+        const deleteNull = values.filter((value) => value);
+
+        if (deleteNull.length !== 0)
+          setPickedFiles((prevFiles) => [...prevFiles, ...deleteNull]);
+      });
+
+      setIsLoading(false);
+      setCanUpload(false);
+    } catch (error) {
+      toast.error(`Sorry, ${error.message} format is not supported yet!`, {
+        position: 'top-center',
+        style: {
+          fontSize: '1rem',
+        },
+      });
+      setIsError(true);
+      setIsLoading(false);
+    }
   }
 
   return (
     <>
+      <Toaster />
       {pickedFiles.length === 0 && (
         <div className='w-3/5 h-72 bg-theme-white py-8 rounded-2xl border-dashed border-2 border-theme-purplePrimary p-32 flex items-center'>
           <div className='flex items-center justify-between w-full'>
             <div>
-              <Button isSelector={true} onClick={handlePickClick}>
+              <Button
+                isSelector={true}
+                onClick={handlePickClick}
+                disabled={isLoading}
+              >
                 Choose Files
               </Button>
               {/* <h3 className='text-theme-fontGray text-xl font-semibold'>
@@ -46,21 +94,28 @@ export default function FilePicker() {
               </h3> */}
             </div>
 
-            <ConversionFormatsGroup />
+            {isLoading ? <Loader /> : <ConversionFormatsGroup />}
           </div>
         </div>
       )}
+
       {pickedFiles.length !== 0 && (
-        <ul className='flex flex-col gap-4 bg-theme-white w-3/5'>
-          {pickedFiles.map((file) => {
-            const { fileDetail, supportedFormats, type } = file;
+        <ul className='flex flex-col gap-4 bg-theme-white w-3/5 p-6 rouded'>
+          {pickedFiles.map((item, i) => {
+            const {
+              file: fileDetail,
+              supported: supportedFormats,
+              extname: type,
+            } = item;
             return (
               <FileList
-                key={fileDetail.lastModified}
-                name={fileDetail.name}
-                size={fileDetail.size}
+                key={i}
                 supportedFormats={supportedFormats}
                 type={type}
+                setPickedFiles={setPickedFiles}
+                fileDetail={item}
+                pickedFiles={pickedFiles}
+                setCanUpload={setCanUpload}
               />
             );
           })}
@@ -75,13 +130,18 @@ export default function FilePicker() {
         className='hidden'
         ref={filePickerRef}
         required
+        multiple
         onChange={handlePickedFile}
       />
 
       {pickedFiles.length > 0 && (
-        <Button isSelector={true} onClick={handlePickClick}>
-          Add More Files
-        </Button>
+        <div className='flex justify-between items-center w-3/5'>
+          <Button isSelector={true} onClick={handlePickClick}>
+            Add More Files
+          </Button>
+
+          <SubmitFiles pickedFiles={pickedFiles} canUpload={canUpload} />
+        </div>
       )}
     </>
   );
