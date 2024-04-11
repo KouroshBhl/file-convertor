@@ -8,6 +8,7 @@ type ButtonProps = {
   isSelector: boolean;
   onClick: () => void;
   disabled: boolean;
+  type?: any;
 };
 
 export default function Button({
@@ -15,11 +16,12 @@ export default function Button({
   isSelector,
   onClick,
   disabled,
+  type,
 }: ButtonProps) {
   return (
     <div className='flex justify-between text-theme-white font-semibold text-base'>
       <button
-        type='button'
+        type={type}
         className={`bg-theme-fontRed_2 px-10 py-4 hover:bg-theme-fontRed_1 rounded-l-md ${
           !isSelector ? 'rounded-r-md' : ''
         } transition-all duration-300 disabled:bg-theme-fontRed_1 disabled:cursor-not-allowed`}

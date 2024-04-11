@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 
 type FormProps = {
   children: ReactNode;
-  action: any;
+  action?: any;
 };
 
 export default function Form({ children, action }: FormProps) {

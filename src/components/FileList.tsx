@@ -16,6 +16,7 @@ type FileListProps = {
   setPickedFiles: (array) => void;
   pickedFiles: any;
   setCanUpload: any;
+  uploadPercentage: any;
 };
 
 export default function FileList({
@@ -25,6 +26,7 @@ export default function FileList({
   fileDetail,
   pickedFiles,
   setCanUpload,
+  uploadPercentage,
 }: FileListProps) {
   const [filterBySearch, setFilterBySearch] = useState(supportedFormats);
   const [isFormatShowing, setIsFormatShowing] = useState(false);
@@ -32,6 +34,12 @@ export default function FileList({
 
   if (!fileDetail) return;
   const { name, size, lastModified } = fileDetail.file;
+
+  let findFile = uploadPercentage.find((item) => {
+    return lastModified === item.fileId;
+  });
+
+  const progressUploadFile = Math.round(findFile.progress * 100);
 
   function handleRemoveFile() {
     const deletedFile = pickedFiles.filter((item) => {
@@ -94,7 +102,19 @@ export default function FileList({
             </div>
           )}
         </div>
-        <p>STATUS</p>
+
+        {findFile.started ? (
+          <div className='w-3/4 bg-theme-fontGray rounded-full'>
+            <div
+              className={`bg-theme-purpleSecondary text-xs font-medium text-theme-white text-center p-0.5 leading-none rounded-full`}
+              style={{ width: `${progressUploadFile}%` }}
+            >
+              {progressUploadFile}%
+            </div>
+          </div>
+        ) : (
+          <span>STATUS</span>
+        )}
         <span>{formatByte(size)}</span>
         <div>{fileDetail.formatTo && <FiSettings />}</div>
         <div

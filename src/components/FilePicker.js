@@ -10,12 +10,14 @@ import { getConvertorFormats } from '@/utils/actions';
 import Button from './Button';
 import Loader from './Loader';
 import SubmitFiles from './SubmitFiles.js';
+import { toBase64 } from '../utils/helpers/toBase64.ts';
 
 export default function FilePicker() {
   const [pickedFiles, setPickedFiles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [canUpload, setCanUpload] = useState(false);
+  const [uploadPercentage, setUploadPercentage] = useState([]);
   const filePickerRef = useRef(null);
 
   function handlePickClick() {
@@ -24,6 +26,7 @@ export default function FilePicker() {
   }
 
   async function handlePickedFile(e) {
+    console.log('Changed');
     setIsError(false);
 
     try {
@@ -37,6 +40,7 @@ export default function FilePicker() {
       const fileTypes = ArrayFiles.map(async (file) => {
         const extname = path.extname(file.name).split('.')[1];
         const supported = await getConvertorFormats(extname);
+        const base64 = await toBase64(file);
         if (!supported) {
           toast.error(`Sorry ${extname} format is not supported yet!`, {
             position: 'top-center',
@@ -46,11 +50,25 @@ export default function FilePicker() {
           });
           return;
         }
+        setUploadPercentage((prevFiles) => {
+          return [
+            ...prevFiles,
+            {
+              fileId: file.lastModified,
+              estimated: 0,
+              loaded: 0,
+              progress: 0,
+              started: false,
+            },
+          ];
+        });
+
         return {
           file,
           extname,
           supported,
           formatTo: null,
+          base64: base64.split(',')[1],
         };
       });
 
@@ -116,6 +134,7 @@ export default function FilePicker() {
                 fileDetail={item}
                 pickedFiles={pickedFiles}
                 setCanUpload={setCanUpload}
+                uploadPercentage={uploadPercentage}
               />
             );
           })}
@@ -140,7 +159,13 @@ export default function FilePicker() {
             Add More Files
           </Button>
 
-          <SubmitFiles pickedFiles={pickedFiles} canUpload={canUpload} />
+          <SubmitFiles
+            pickedFiles={pickedFiles}
+            canUpload={canUpload}
+            setPickedFiles={setPickedFiles}
+            setUploadPercentage={setUploadPercentage}
+            uploadPercentage={uploadPercentage}
+          />
         </div>
       )}
     </>

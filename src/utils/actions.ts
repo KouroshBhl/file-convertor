@@ -7,18 +7,15 @@ import {
   getSupportedFormats,
 } from './helpers/convertAPIFormat';
 import { converAPIDomain, convertAPIVersion } from './domains';
+import ConvertApi from 'convertapi-js';
 
 type ConvertProps = {
-  requestUrl: string;
+  file: any;
 };
 
 type GetConvertorFormatsProps = {
   convertFrom: string;
 };
-
-export async function convert({ requestUrl }: ConvertProps) {
-  console.log('Sent');
-}
 
 export async function getConvertorFormats(convertFrom: any) {
   try {
@@ -46,11 +43,11 @@ export async function getAllConversions(
   to: boolean,
   group: boolean = false
 ) {
+  console.log('getAllConversions');
   try {
     const response = await fetch(
       `https://${convertAPIVersion}.${converAPIDomain}/info`
     );
-    console.log(response);
     const data = await response.json();
 
     const supportedFormats = getSupportedFormats(data, from, to, group);
@@ -63,4 +60,49 @@ export async function getAllConversions(
   } catch (error) {
     console.log('OPS');
   }
+}
+
+export async function convert(formData) {
+  console.log(formData);
+  // const { base64, name } = file;
+  // console.log(formData.get());
+  // console.log('=================================');
+  // let convertApi = ConvertApi.auth(process.env.NEXT_PUBLIC_CONVERTAPI_SECRET);
+  // let params = convertApi.createParams();
+  // params.add('file', file.file);
+  // let result = await convertApi.convert(file.extname, file.formatTo, params);
+  // console.log(result.files[0].Url);
+  // return result.files[0].Url;
+
+  // const response = await fetch(
+  //   `https://${convertAPIVersion}.${converAPIDomain}/convert/${file.extname}/to/${file.formatTo}?Secret=${process.env.NEXT_PUBLIC_CONVERTAPI_SECRET}`,
+  //   {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       Parameters: [
+  //         {
+  //           Name: 'File',
+  //           FileValue: {
+  //             Name: name,
+  //             Data: base64,
+  //           },
+  //         },
+  //         {
+  //           Name: 'StoreFile',
+  //           Value: true,
+  //         },
+  //       ],
+  //     }),
+  //   }
+  // );
+  // const data = await response.json();
+  // console.log(data);
+  // return data;
+}
+
+export async function converToFormat(file) {
+  console.log('=================================');
 }

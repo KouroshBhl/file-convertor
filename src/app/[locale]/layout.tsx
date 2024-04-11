@@ -39,9 +39,9 @@ export default function RootLayout({
         <Header />
 
         <main className='relative'>
-          <Form action={convert}>
+          <div className='h-1/4 bg-theme-lightGray w-full flex gap-12 flex-col justify-center items-center py-44'>
             <FilePicker />
-          </Form>
+          </div>
           {children}
         </main>
         <Footer />
