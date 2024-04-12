@@ -3,17 +3,7 @@ export default function formatBytes(bytes, decimals = 2) {
 
   const k = 1024;
   const dm = decimals < 0 ? 0 : decimals;
-  const sizes = [
-    'Bytes',
-    'KiB',
-    'MB',
-    'GiB',
-    'TiB',
-    'PiB',
-    'EiB',
-    'ZiB',
-    'YiB',
-  ];
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EiB', 'ZiB', 'YiB'];
 
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 

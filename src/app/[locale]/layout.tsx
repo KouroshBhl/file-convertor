@@ -6,8 +6,7 @@ import Footer from '../../components/Footer';
 import Form from '@/components/Form';
 import Heading from '@/components/Heading';
 import Button from '@/components/Button';
-import FilePicker from '@/components/FilePicker.js';
-import { convert } from '@/utils/actions';
+import FilePickerContainer from '@/components/FilePickerContainer';
 
 const inter = Inter({ subsets: ['latin'] });
 const plusJakarta = Plus_Jakarta_Sans({
@@ -40,7 +39,7 @@ export default function RootLayout({
 
         <main className='relative'>
           <div className='h-1/4 bg-theme-lightGray w-full flex gap-12 flex-col justify-center items-center py-44'>
-            <FilePicker />
+            <FilePickerContainer />
           </div>
           {children}
         </main>

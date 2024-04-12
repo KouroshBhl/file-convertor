@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { HiMiniChevronDown } from 'react-icons/hi2';
 import { FiSettings } from 'react-icons/fi';
@@ -6,6 +6,7 @@ import FormatsContainer from './FormatsContainer';
 import FormatLists from './FormatLists';
 import SearchFormats from './SearchFormats';
 import formatByte from '../utils/helpers/formatByte';
+import { useFilePicker } from '../context/filePicker.js';
 
 type FileListProps = {
   size: number;
@@ -22,12 +23,11 @@ type FileListProps = {
 export default function FileList({
   supportedFormats,
   type,
-  setPickedFiles,
   fileDetail,
-  pickedFiles,
-  setCanUpload,
-  uploadPercentage,
 }: FileListProps) {
+  const { uploadPercentage, setCanUpload, pickedFiles, setPickedFiles } =
+    useFilePicker();
+
   const [filterBySearch, setFilterBySearch] = useState(supportedFormats);
   const [isFormatShowing, setIsFormatShowing] = useState(false);
   const [formatTo, setFormatTo] = useState('...');
@@ -113,7 +113,7 @@ export default function FileList({
             </div>
           </div>
         ) : (
-          <span>STATUS</span>
+          <span>Ready to upload</span>
         )}
         <span>{formatByte(size)}</span>
         <div>{fileDetail.formatTo && <FiSettings />}</div>

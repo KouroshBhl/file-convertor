@@ -1,7 +1,5 @@
-'use client';
-
 import path from 'path';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 import ConversionFormatsGroup from './ConversionFormatsGroup.js';
@@ -11,14 +9,19 @@ import Button from './Button';
 import Loader from './Loader';
 import SubmitFiles from './SubmitFiles.js';
 import { toBase64 } from '../utils/helpers/toBase64.ts';
+import { useFilePicker } from '../context/filePicker.js';
 
 export default function FilePicker() {
-  const [pickedFiles, setPickedFiles] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [canUpload, setCanUpload] = useState(false);
-  const [uploadPercentage, setUploadPercentage] = useState([]);
   const filePickerRef = useRef(null);
+  const {
+    setIsError,
+    setIsLoading,
+    setUploadPercentage,
+    setCanUpload,
+    pickedFiles,
+    isLoading,
+    setPickedFiles,
+  } = useFilePicker();
 
   function handlePickClick() {
     setIsError(false);
@@ -26,7 +29,6 @@ export default function FilePicker() {
   }
 
   async function handlePickedFile(e) {
-    console.log('Changed');
     setIsError(false);
 
     try {
@@ -38,7 +40,10 @@ export default function FilePicker() {
       const ArrayFiles = Array.from(file);
 
       const fileTypes = ArrayFiles.map(async (file) => {
-        const extname = path.extname(file.name).split('.')[1];
+        const extname = path
+          .extname(file.name)
+          .split('.')[1]
+          .toLocaleLowerCase();
         const supported = await getConvertorFormats(extname);
         const base64 = await toBase64(file);
         if (!supported) {
@@ -120,21 +125,14 @@ export default function FilePicker() {
       {pickedFiles.length !== 0 && (
         <ul className='flex flex-col gap-4 bg-theme-white w-3/5 p-6 rouded'>
           {pickedFiles.map((item, i) => {
-            const {
-              file: fileDetail,
-              supported: supportedFormats,
-              extname: type,
-            } = item;
+            const { supported: supportedFormats, extname: type } = item;
+
             return (
               <FileList
                 key={i}
                 supportedFormats={supportedFormats}
                 type={type}
-                setPickedFiles={setPickedFiles}
                 fileDetail={item}
-                pickedFiles={pickedFiles}
-                setCanUpload={setCanUpload}
-                uploadPercentage={uploadPercentage}
               />
             );
           })}
@@ -159,13 +157,7 @@ export default function FilePicker() {
             Add More Files
           </Button>
 
-          <SubmitFiles
-            pickedFiles={pickedFiles}
-            canUpload={canUpload}
-            setPickedFiles={setPickedFiles}
-            setUploadPercentage={setUploadPercentage}
-            uploadPercentage={uploadPercentage}
-          />
+          <SubmitFiles />
         </div>
       )}
     </>
