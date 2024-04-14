@@ -26,11 +26,12 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/components/FilePicker.js",
+    "src/components/FilePicker.jsx",
     "src/context/FilePickerContext.js",
     "src/context/filePicker.js",
-    "src/components/ConversionFormatsGroup.js",
-    "src/utils/helpers/getFormat.js"
+    "src/components/ConversionFormatsGroup.jsx",
+    "src/utils/helpers/getFormat.js",
+    "src/utils/hooks/useDetectMouseOutside.js"
   ],
   "exclude": ["node_modules"]
 }

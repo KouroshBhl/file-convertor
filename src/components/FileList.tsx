@@ -7,6 +7,7 @@ import FormatLists from './FormatLists';
 import SearchFormats from './SearchFormats';
 import formatByte from '../utils/helpers/formatByte';
 import { useFilePicker } from '../context/filePicker.js';
+import FileOptions from './FileOptions';
 
 type FileListProps = {
   size: number;
@@ -31,6 +32,7 @@ export default function FileList({
   const [filterBySearch, setFilterBySearch] = useState(supportedFormats);
   const [isFormatShowing, setIsFormatShowing] = useState(false);
   const [formatTo, setFormatTo] = useState('...');
+  const [showModal, setShowModal] = useState(false);
 
   if (!fileDetail) return;
   const { name, size, lastModified } = fileDetail.file;
@@ -63,6 +65,14 @@ export default function FileList({
 
   return (
     <>
+      {showModal && (
+        <FileOptions
+          formatTo={formatTo}
+          type={type}
+          setShowModal={setShowModal}
+          fileId={lastModified}
+        />
+      )}
       <li className='grid grid-cols-[4rem,3fr,1fr,1fr,1fr,4rem,4rem] text-base items-center py-2'>
         <span>ICON</span>
         <p>{name}</p>
@@ -116,7 +126,11 @@ export default function FileList({
           <span>Ready to upload</span>
         )}
         <span>{formatByte(size)}</span>
-        <div>{fileDetail.formatTo && <FiSettings />}</div>
+        <div>
+          {fileDetail.formatTo && (
+            <FiSettings onClick={() => setShowModal(true)} />
+          )}
+        </div>
         <div
           onClick={handleRemoveFile}
           className='hover:cursor-pointer hover:text-theme-fontRed_4 transition-all delay-100 ease-in-out'

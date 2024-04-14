@@ -9,6 +9,7 @@ type ButtonProps = {
   onClick: () => void;
   disabled: boolean;
   type?: any;
+  className: any;
 };
 
 export default function Button({
@@ -17,9 +18,12 @@ export default function Button({
   onClick,
   disabled,
   type,
+  className,
 }: ButtonProps) {
   return (
-    <div className='flex justify-between text-theme-white font-semibold text-base'>
+    <div
+      className={`${className} flex justify-between text-theme-white font-semibold text-base`}
+    >
       <button
         type={type}
         className={`bg-theme-fontRed_2 px-10 py-4 hover:bg-theme-fontRed_1 rounded-l-md ${

@@ -2,12 +2,12 @@ import path from 'path';
 import React, { useRef, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
-import ConversionFormatsGroup from './ConversionFormatsGroup.js';
-import FileList from './FileList';
+import ConversionFormatsGroup from './ConversionFormatsGroup.jsx';
+import FileList from './FileList.tsx';
 import { getConvertorFormats } from '@/utils/actions';
-import Button from './Button';
-import Loader from './Loader';
-import SubmitFiles from './SubmitFiles.js';
+import Button from './Button.tsx';
+import Loader from './Loader.tsx';
+import SubmitFiles from './SubmitFiles.jsx';
 import { toBase64 } from '../utils/helpers/toBase64.ts';
 import { useFilePicker } from '../context/filePicker.js';
 
@@ -74,6 +74,7 @@ export default function FilePicker() {
           supported,
           formatTo: null,
           base64: base64.split(',')[1],
+          parameters: [],
         };
       });
 

@@ -1,5 +1,5 @@
 import Button from '@/components/Button';
-import FilePicker from '@/components/FilePicker.js';
+import FilePicker from '@/components/FilePicker.jsx';
 import Form from '@/components/Form';
 import Heading from '@/components/Heading';
 import { convert } from '@/utils/actions';

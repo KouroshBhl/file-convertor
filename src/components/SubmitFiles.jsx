@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import Button from './Button';
-import ConvertApi from 'convertapi-js';
+import Button from './Button.tsx';
 import axios from 'axios';
 import { useFilePicker } from '../context/filePicker.js';
+import { convertAPIVersion, converAPIDomain } from '../utils/domains.ts';
 
 function SubmitFiles() {
   const [resultPromises, setResultPromises] = useState([]);
@@ -20,10 +20,10 @@ function SubmitFiles() {
         (item) => item.fileId === file.file.lastModified
       );
 
-      console.log(file);
+      console.log(...file.parameters);
 
       const data = axios.post(
-        `https://v2.convertapi.com/convert/${file.extname}/to/${file.formatTo}?Secret=IqyDEpBdFe1Kucn0`,
+        `https://${convertAPIVersion}.${converAPIDomain}/convert/${file.extname}/to/${file.formatTo}?Secret=IqyDEpBdFe1Kucn0`,
         {
           Parameters: [
             {
@@ -44,6 +44,8 @@ function SubmitFiles() {
               Name: 'StoreFile',
               Value: true,
             },
+
+            ...file.parameters,
           ],
         },
         {

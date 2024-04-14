@@ -2,7 +2,7 @@ import {
   formatAllConversions,
   getSupportedFormats,
 } from '@/utils/helpers/convertAPIFormat';
-import FilePicker from '@/components/FilePicker.js';
+import FilePicker from '@/components/FilePicker.jsx';
 
 import { convertAPIVersion, converAPIDomain } from '@/utils/domains';
 import { locales } from '@/i18n';
