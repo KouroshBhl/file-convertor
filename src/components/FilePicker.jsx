@@ -1,5 +1,5 @@
 import path from 'path';
-import React, { useRef, useState } from 'react';
+import React, { useId, useRef, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 import ConversionFormatsGroup from './ConversionFormatsGroup.jsx';
@@ -12,6 +12,7 @@ import { toBase64 } from '../utils/helpers/toBase64.ts';
 import { useFilePicker } from '../context/filePicker.js';
 
 export default function FilePicker() {
+  // const fileUniqueID = useId();
   const filePickerRef = useRef(null);
   const {
     setIsError,
@@ -59,7 +60,7 @@ export default function FilePicker() {
           return [
             ...prevFiles,
             {
-              fileId: file.lastModified,
+              fileUniqueID: `${file.lastModified}${file.size}`,
               estimated: 0,
               loaded: 0,
               progress: 0,
@@ -75,6 +76,8 @@ export default function FilePicker() {
           formatTo: null,
           base64: base64.split(',')[1],
           parameters: [],
+          results: {},
+          fileUniqueID: `${file.lastModified}${file.size}`,
         };
       });
 
@@ -126,7 +129,11 @@ export default function FilePicker() {
       {pickedFiles.length !== 0 && (
         <ul className='flex flex-col gap-4 bg-theme-white w-3/5 p-6 rouded'>
           {pickedFiles.map((item, i) => {
-            const { supported: supportedFormats, extname: type } = item;
+            const {
+              supported: supportedFormats,
+              extname: type,
+              fileUniqueID,
+            } = item;
 
             return (
               <FileList
@@ -134,6 +141,7 @@ export default function FilePicker() {
                 supportedFormats={supportedFormats}
                 type={type}
                 fileDetail={item}
+                fileUniqueID={fileUniqueID}
               />
             );
           })}

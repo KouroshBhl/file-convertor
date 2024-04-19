@@ -4,12 +4,12 @@ import ConversionPickup from './ConversionPickup';
 import FormatsContainer from './FormatsContainer';
 import Link from 'next/link';
 import { HiMiniChevronDown } from 'react-icons/hi2';
-import FormatLists from './FormatLists';
+import { useFilePicker } from '../context/filePicker';
 
 export default function ConversionFormatsGroup() {
+  const { showFrom, setShowFrom, showTo, setShowTo } = useFilePicker();
+
   const [allFormats, setAllFormats] = useState([]);
-  const [showFrom, setShowFrom] = useState(false);
-  const [showTo, setShowTo] = useState(false);
   const [fromFormatDetect, setFromFormatDetect] = useState('pdf');
   const [toFormatDetect, setToFormatDetect] = useState('...');
 
@@ -17,11 +17,9 @@ export default function ConversionFormatsGroup() {
 
   function handleShowFrom() {
     setShowFrom((prev) => !prev);
-    setShowTo(false);
   }
   function handleShowTo() {
     setShowTo((prev) => !prev);
-    setShowFrom(false);
   }
 
   useEffect(() => {
@@ -67,8 +65,6 @@ export default function ConversionFormatsGroup() {
             uniqueGroup={uniqueGroup}
             allFormats={allFormats}
             setFromFormatDetect={setFromFormatDetect}
-            setShowTo={setShowTo}
-            setShowFrom={setShowFrom}
           />
         )}
       </div>

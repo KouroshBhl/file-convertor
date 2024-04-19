@@ -7,7 +7,8 @@ export function useDetectOutside(handler, listenCapturing = true) {
     function () {
       function handleClick(e) {
         if (ref.current && !ref.current.contains(e.target)) {
-          handler(false);
+          if (typeof handler === 'function') return handler(false);
+          handler.forEach((fn) => fn(false));
         }
       }
 

@@ -7,6 +7,8 @@ export function FilePickerWrapperContext({ children }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [canUpload, setCanUpload] = useState(false);
+  const [showFrom, setShowFrom] = useState(false);
+  const [showTo, setShowTo] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState([]);
 
   return (
@@ -22,6 +24,10 @@ export function FilePickerWrapperContext({ children }) {
         setCanUpload,
         uploadPercentage,
         setUploadPercentage,
+        showFrom,
+        setShowFrom,
+        showTo,
+        setShowTo,
       }}
     >
       {children}

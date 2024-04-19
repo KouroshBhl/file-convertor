@@ -8,6 +8,7 @@ import SearchFormats from './SearchFormats';
 import formatByte from '../utils/helpers/formatByte';
 import { useFilePicker } from '../context/filePicker.js';
 import FileOptions from './FileOptions';
+import Image from 'next/image';
 
 type FileListProps = {
   size: number;
@@ -19,12 +20,14 @@ type FileListProps = {
   pickedFiles: any;
   setCanUpload: any;
   uploadPercentage: any;
+  fileUniqueID: any;
 };
 
 export default function FileList({
   supportedFormats,
   type,
   fileDetail,
+  fileUniqueID,
 }: FileListProps) {
   const { uploadPercentage, setCanUpload, pickedFiles, setPickedFiles } =
     useFilePicker();
@@ -38,14 +41,15 @@ export default function FileList({
   const { name, size, lastModified } = fileDetail.file;
 
   let findFile = uploadPercentage.find((item) => {
-    return lastModified === item.fileId;
+    return fileUniqueID === item.fileUniqueID;
   });
 
-  const progressUploadFile = Math.round(findFile.progress * 100);
+  const progressUploadFile = Math.round(findFile?.progress * 100);
 
   function handleRemoveFile() {
     const deletedFile = pickedFiles.filter((item) => {
-      return item.file.lastModified !== lastModified;
+      console.log(item.fileUniqueID, fileUniqueID);
+      return item.fileUniqueID !== fileUniqueID;
     });
 
     setPickedFiles(deletedFile);
@@ -54,14 +58,15 @@ export default function FileList({
   function handleFormatTo(to) {
     setIsFormatShowing(false);
     setFormatTo(to);
-    const findFile = pickedFiles.find((item) => {
-      return item.file.lastModified === lastModified;
-    });
-    findFile.formatTo = to;
 
-    const upload = pickedFiles.every((file) => file.formatTo);
-    setCanUpload(upload);
+    setPickedFiles((file) =>
+      file.map((item) =>
+        item.fileUniqueID === fileUniqueID ? { ...item, formatTo: to } : item
+      )
+    );
   }
+  const upload = pickedFiles.every((file) => file.formatTo);
+  setCanUpload(upload);
 
   return (
     <>
@@ -73,17 +78,17 @@ export default function FileList({
           fileId={lastModified}
         />
       )}
-      <li className='grid grid-cols-[4rem,3fr,1fr,1fr,1fr,4rem,4rem] text-base items-center py-2'>
-        <span>ICON</span>
-        <p>{name}</p>
+      <li className='grid grid-cols-[4rem,3fr,1fr,1.5fr,1fr,4rem,4rem] text-base items-center py-2'>
+        <Image alt='icon' src={`/icons/${type}.svg`} width={32} height={32} />
+        <span>{name}</span>
         <div>
           <div className='flex gap-4 items-center'>
-            <span>to</span>
+            <b>to</b>
             <div
               className='bg-theme-lightGray_2 px-2 py-1 rounded font-semibold text-sm flex justify-center items-center gap-1 hover:cursor-pointer'
               onClick={() => setIsFormatShowing((prev) => !prev)}
             >
-              <span>{formatTo}</span>
+              <b>{formatTo.toLocaleUpperCase()}</b>
               <HiMiniChevronDown className='text-lg' />
             </div>
           </div>
@@ -103,7 +108,7 @@ export default function FileList({
                         to={`${type}-to-${format}`}
                         onClick={() => handleFormatTo(format)}
                       >
-                        {format}
+                        {format.toUpperCase()}
                       </FormatLists>
                     );
                   })}
@@ -123,19 +128,30 @@ export default function FileList({
             </div>
           </div>
         ) : (
-          <span>Ready to upload</span>
+          <div
+            className={`${
+              fileDetail.formatTo ? 'bg-green-500' : 'bg-red-500'
+            } w-2/3 flex justify-center items-center rounded py-1'`}
+          >
+            <span className='text-white text-sm font-semibold'>
+              {fileDetail.formatTo ? 'Ready' : 'Choose Output'}
+            </span>
+          </div>
         )}
-        <span>{formatByte(size)}</span>
+        <span className='text-sm font-semibold'>{formatByte(size)}</span>
         <div>
           {fileDetail.formatTo && (
-            <FiSettings onClick={() => setShowModal(true)} />
+            <FiSettings
+              onClick={() => setShowModal(true)}
+              className='text-lg'
+            />
           )}
         </div>
         <div
           onClick={handleRemoveFile}
           className='hover:cursor-pointer hover:text-theme-fontRed_4 transition-all delay-100 ease-in-out'
         >
-          <IoMdClose />
+          <IoMdClose className='text-lg' />
         </div>
       </li>
     </>

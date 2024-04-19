@@ -20,8 +20,6 @@ function SubmitFiles() {
         (item) => item.fileId === file.file.lastModified
       );
 
-      console.log(...file.parameters);
-
       const data = axios.post(
         `https://${convertAPIVersion}.${converAPIDomain}/convert/${file.extname}/to/${file.formatTo}?Secret=IqyDEpBdFe1Kucn0`,
         {
@@ -48,6 +46,7 @@ function SubmitFiles() {
             ...file.parameters,
           ],
         },
+
         {
           onUploadProgress: function (progressEvent) {
             setUploadPercentage((prevFiles) => {

@@ -4,16 +4,12 @@ import Loader from './Loader';
 import { HiMiniChevronRight } from 'react-icons/hi2';
 import ShowFormatsFrom from './ShowFormatsFrom';
 import SearchFormats from './SearchFormats';
+import { useFilePicker } from '../context/filePicker';
 
-function ConversionPickup({
-  uniqueGroup,
-  allFormats,
-  setFromFormatDetect,
-  setShowFrom,
-  setShowTo,
-}) {
+function ConversionPickup({ uniqueGroup, allFormats, setFromFormatDetect }) {
   const [groupDetect, setGroupDetect] = useState('Microsoft Office');
   const [filterBySearch, setFilterBySearch] = useState([]);
+  const { setShowFrom } = useFilePicker();
 
   function handleDetectGroupFormat(e) {
     setGroupDetect(e.target.getAttribute('data-value'));
