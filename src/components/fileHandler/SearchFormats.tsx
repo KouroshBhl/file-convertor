@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
 
-export default function SearchFormats({ formats, setter, initState }) {
+type SearchFormatsProps = {
+  formats: any[];
+  setter: (value: any) => void;
+  initState?: boolean;
+};
+
+export default function SearchFormats({
+  formats,
+  setter,
+  initState,
+}: SearchFormatsProps) {
   const [isFoundFormat, setIsFoundFormat] = useState(true);
 
-  function handleSearch(e) {
+  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     const inputValue = e.target.value;
     if (!inputValue) setter(initState ? formats : []);
 

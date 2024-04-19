@@ -1,14 +1,17 @@
 import { useEffect, useRef } from 'react';
 
-export function useDetectOutside(handler, listenCapturing = true) {
-  const ref = useRef();
+export function useDetectOutside(
+  handler: any,
+  listenCapturing: boolean = true
+) {
+  const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(
     function () {
-      function handleClick(e) {
-        if (ref.current && !ref.current.contains(e.target)) {
+      function handleClick(e: MouseEvent) {
+        if (ref.current && !ref.current.contains(e.target as Node)) {
           if (typeof handler === 'function') return handler(false);
-          handler.forEach((fn) => fn(false));
+          handler.forEach((fn: any) => fn(false));
         }
       }
 

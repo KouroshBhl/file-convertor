@@ -3,7 +3,7 @@
 import { getConvertorFormats } from '@/utils/actions';
 import React from 'react';
 
-export default async function SelectConvertTo(type) {
+export default async function SelectConvertTo(type: string) {
   const getFileFormat = type.split('/')[1].toString();
   const fromAllFormated = getConvertorFormats(getFileFormat);
 

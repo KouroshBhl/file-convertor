@@ -1,6 +1,14 @@
 import React from 'react';
 
-export default function ShowFormatsFrom({ formats, onClick }) {
+type ShowFormatsFromProps = {
+  formats: { from: string }[];
+  onClick: (e: React.MouseEvent<HTMLLIElement>) => void;
+};
+
+export default function ShowFormatsFrom({
+  formats,
+  onClick,
+}: ShowFormatsFromProps) {
   return (
     <ul className='grid grid-cols-3 font-bold'>
       {formats.map((format, id) => {

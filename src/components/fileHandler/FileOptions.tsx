@@ -1,26 +1,56 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useDetectOutside } from '../utils/hooks/useDetectMouseOutside';
-import { convertAPIVersion, converAPIDomain } from '../utils/domains.ts';
+import { useDetectOutside } from '../../utils/hooks/useDetectMouseOutside';
+import { convertAPIVersion, converAPIDomain } from '../../utils/domains';
 import { useForm } from 'react-hook-form';
 import { FaInfo } from 'react-icons/fa';
-import Button from './Button.tsx';
-import { useFilePicker } from '../context/filePicker.js';
+import Button from '../ui/Button';
+import {
+  useFilePicker,
+  type PickedFilesType,
+} from '../../context/FilePickerContext';
 
-function FileOptions({ formatTo, type, setShowModal, fileId }) {
+type FileOptionsProps = {
+  formatTo: string;
+  type: string;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  fileId: number;
+};
+
+type ParamsType = {
+  Name: string;
+  Value: string;
+};
+
+type FileOptionsType = {
+  Name: string;
+  Label: string;
+  Type: string;
+  Description: string;
+  Range: {
+    From: number;
+    To: number;
+  };
+  Values: {
+    [key: string]: string;
+  };
+};
+
+function FileOptions({
+  formatTo,
+  type,
+  setShowModal,
+  fileId,
+}: FileOptionsProps) {
   const ref = useDetectOutside(setShowModal);
   const [fileOptions, setFileOptions] = useState([]);
   const [showDescription, setShowDescription] = useState('');
-  const [formattedParameters, setFormattedParameters] = useState([]);
-  const { setPickedFiles, pickedFiles } = useFilePicker();
+  const { setPickedFiles } = useFilePicker();
 
-  const { register, handleSubmit, formState } = useForm();
-  const { errors } = formState;
+  const { register, handleSubmit } = useForm();
 
-  function onSubmit(data) {
-    const file = pickedFiles.find((file) => file.file.lastModified === fileId);
-
-    const params = [];
+  function onSubmit(data: { [key: string]: string }) {
+    const params: ParamsType[] = [];
     for (let parameter in data) {
       if (
         data[parameter] !== '' &&
@@ -32,8 +62,8 @@ function FileOptions({ formatTo, type, setShowModal, fileId }) {
       }
     }
 
-    setPickedFiles((prev) => {
-      const updatedParameters = prev.map((file) => {
+    setPickedFiles((prev: PickedFilesType[]) => {
+      const updatedParameters = prev.map((file: any) => {
         if (file.file.lastModified === fileId) {
           return { ...file, parameters: params };
         }
@@ -42,29 +72,10 @@ function FileOptions({ formatTo, type, setShowModal, fileId }) {
       return updatedParameters;
     });
 
-    // const validParameters = data.filter((parameter) => {
-    //   console.log(parameter);
-    //   if (parameters) return parameter;
-    // });
-    // console.log(validParameters);
-
-    // const updatedFile = {
-    //   ...file,
-    //   parameters: formatedParameters,
-    // };
-    // const updatedFiles = pickedFiles.map((file) => {
-    //   if (file.file.lastModified === fileId) {
-    //     return formatedParameters;
-    //   }
-    //   return file;
-    // });
-    // console.log(updatedFiles);
-    // setPickedFiles(updatedFiles);
-
     setShowModal(false);
   }
 
-  const handleShowDescription = (optionName) => {
+  const handleShowDescription = (optionName: string) => {
     setShowDescription(optionName);
   };
 
@@ -107,7 +118,7 @@ function FileOptions({ formatTo, type, setShowModal, fileId }) {
           onSubmit={handleSubmit(onSubmit)}
           className='grid grid-cols-2 gap-8 text-sm'
         >
-          {fileOptions.map((option, id) => {
+          {fileOptions.map((option: FileOptionsType, id: number) => {
             return (
               <div key={id} className='grid grid-cols-2 gap-4'>
                 <div className='flex items-center gap-2'>
@@ -134,7 +145,7 @@ function FileOptions({ formatTo, type, setShowModal, fileId }) {
                       <input
                         {...register(option.Name)}
                         type='radio'
-                        value={true}
+                        value={'true'}
                       />
                       <label htmlFor={option.Name}>Yes</label>
                     </div>
@@ -142,7 +153,7 @@ function FileOptions({ formatTo, type, setShowModal, fileId }) {
                       <input
                         {...register(option.Name)}
                         type='radio'
-                        value={false}
+                        value={'false'}
                       />
                       <label htmlFor={option.Name}>No</label>
                     </div>
@@ -168,7 +179,6 @@ function FileOptions({ formatTo, type, setShowModal, fileId }) {
                 )}
                 {option.Type === 'Collection' && (
                   <select {...register(option.Name)}>
-                    {console.log(option.Name)}
                     {Object.keys(option.Values).map((item, index) => {
                       return (
                         <option
@@ -189,7 +199,6 @@ function FileOptions({ formatTo, type, setShowModal, fileId }) {
             );
           })}
 
-          {/* <input defaultValue='test' {...register('example')} type='radio' /> */}
           <div className='grid col-end-3 mt-8'>
             <Button isSelector={false} type='submit' className='w-full ml-auto'>
               Add Changes

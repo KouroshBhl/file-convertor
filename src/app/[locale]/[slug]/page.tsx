@@ -1,15 +1,7 @@
-import {
-  formatAllConversions,
-  getSupportedFormats,
-} from '@/utils/helpers/convertAPIFormat';
-import FilePicker from '@/components/FilePicker.jsx';
-
 import { convertAPIVersion, converAPIDomain } from '@/utils/domains';
 import { locales } from '@/i18n';
-import Form from '@/components/Form';
-import Button from '@/components/Button';
-import { convert, getAllConversions } from '@/utils/actions';
-import Heading from '@/components/Heading';
+import { getAllConversions } from '@/utils/actions';
+import Heading from '@/components/ui/Heading';
 
 type ParamsProps = {
   params: {
@@ -43,10 +35,6 @@ export async function getStaticPaths() {
   const formatedAllConversionsArray = await getAllConversions(true, true);
 
   const formatedArray = formatedAllConversionsArray.split(',').slice(0, -1);
-
-  // const paths = formatedAllConversionsArray.map((conversion: string) => ({
-  //   params: { slug: conversion, locale: 'id' },
-  // }));
 
   const paths = [];
   for (const locale of locales) {

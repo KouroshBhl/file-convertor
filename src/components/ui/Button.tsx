@@ -6,10 +6,15 @@ import { FaLink } from 'react-icons/fa6';
 type ButtonProps = {
   children: ReactNode;
   isSelector: boolean;
-  onClick: () => void;
-  disabled: boolean;
-  type?: any;
-  className: any;
+  onClick?: () => void;
+  disabled?: boolean;
+  type?: HTMLButtonElement['type'];
+  className?: React.ComponentProps<'div'>['className'];
+};
+
+type LinkButtonProps = {
+  children: ReactNode;
+  isRounded: boolean;
 };
 
 export default function Button({
@@ -52,7 +57,7 @@ export default function Button({
   );
 }
 
-function LinkButton({ children, isRounded }) {
+function LinkButton({ children, isRounded }: LinkButtonProps) {
   return (
     <button
       className={`font-bold bg-theme-fontRed px-4 py-2 bg-theme-fontRed_2 hover:bg-theme-fontRed_1 ${

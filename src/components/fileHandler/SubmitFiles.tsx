@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import Button from './Button.tsx';
-import axios from 'axios';
-import { useFilePicker } from '../context/filePicker.js';
-import { convertAPIVersion, converAPIDomain } from '../utils/domains.ts';
+import Button from '../ui/Button';
+import axios, { AxiosResponse } from 'axios';
+import { useFilePicker } from '../../context/FilePickerContext';
+import { convertAPIVersion, converAPIDomain } from '../../utils/domains';
 
 function SubmitFiles() {
-  const [resultPromises, setResultPromises] = useState([]);
+  const [resultPromises, setResultPromises] = useState<
+    Promise<AxiosResponse<any, any>>[]
+  >([]);
   const { canUpload, pickedFiles, setUploadPercentage, uploadPercentage } =
     useFilePicker();
 
@@ -17,7 +19,7 @@ function SubmitFiles() {
   async function handleSubmitFiles() {
     for (const file of pickedFiles) {
       let findFile = uploadPercentage.find(
-        (item) => item.fileId === file.file.lastModified
+        (item) => item.fileUniqueID === file.fileUniqueID
       );
 
       const data = axios.post(
@@ -49,25 +51,27 @@ function SubmitFiles() {
 
         {
           onUploadProgress: function (progressEvent) {
-            setUploadPercentage((prevFiles) => {
-              const updatedFiles = prevFiles.map((file) => {
-                if (file.fileId === findFile.fileId) {
-                  return {
-                    ...file,
-                    estimated: progressEvent.estimated,
-                    loaded: progressEvent.loaded,
-                    progress: progressEvent.progress,
-                    started: true,
-                  };
+            setUploadPercentage((prevFiles: any) => {
+              const updatedFiles = prevFiles.map(
+                (file: { fileUniqueID: number }) => {
+                  if (file.fileUniqueID === findFile?.fileUniqueID) {
+                    return {
+                      ...file,
+                      estimated: progressEvent.estimated,
+                      loaded: progressEvent.loaded,
+                      progress: progressEvent.progress,
+                      started: true,
+                    };
+                  }
+                  return file;
                 }
-                return file;
-              });
+              );
               return updatedFiles;
             });
           },
         }
       );
-      setResultPromises((prevPromises) => [...prevPromises, data]);
+      setResultPromises((prevPromises: any) => [...prevPromises, data]);
     }
   }
 

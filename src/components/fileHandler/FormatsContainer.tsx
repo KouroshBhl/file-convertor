@@ -1,10 +1,21 @@
-import { use } from 'react';
-import { useFilePicker } from '../context/filePicker';
-import { useDetectOutside } from '../utils/hooks/useDetectMouseOutside';
+import { type ReactNode } from 'react';
+import { useFilePicker } from '../../context/FilePickerContext';
+import { useDetectOutside } from '../../utils/hooks/useDetectMouseOutside';
 
-function FormatsContainer({ children, width, className }) {
+type FormatsContainerProps = {
+  children: ReactNode;
+  width?: string;
+  className?: string;
+};
+
+function FormatsContainer({
+  children,
+  width,
+  className,
+}: FormatsContainerProps) {
   const { setShowFrom, setShowTo } = useFilePicker();
   const ref = useDetectOutside([setShowFrom, setShowTo], false);
+
   return (
     <div
       ref={ref}

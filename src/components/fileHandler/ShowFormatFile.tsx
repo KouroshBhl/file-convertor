@@ -1,6 +1,14 @@
 import React from 'react';
 
-export default function ShowFormatFile({ onClick, children }) {
+type ShowFormatFileProps = {
+  onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
+  children: React.ReactNode;
+};
+
+export default function ShowFormatFile({
+  onClick,
+  children,
+}: ShowFormatFileProps) {
   return (
     <div
       onClick={onClick}

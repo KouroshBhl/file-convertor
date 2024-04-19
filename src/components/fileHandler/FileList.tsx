@@ -1,25 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { IoMdClose } from 'react-icons/io';
-import { HiMiniChevronDown } from 'react-icons/hi2';
 import { FiSettings } from 'react-icons/fi';
+import { HiMiniChevronDown } from 'react-icons/hi2';
+
+import {
+  type PickedFilesType,
+  useFilePicker,
+} from '../../context/FilePickerContext';
 import FormatsContainer from './FormatsContainer';
 import FormatLists from './FormatLists';
 import SearchFormats from './SearchFormats';
-import formatByte from '../utils/helpers/formatByte';
-import { useFilePicker } from '../context/filePicker.js';
+import formatByte from '../../utils/helpers/formatByte';
 import FileOptions from './FileOptions';
-import Image from 'next/image';
 
 type FileListProps = {
-  size: number;
-  name: string;
   supportedFormats: any;
   type: string;
   fileDetail: any;
-  setPickedFiles: (array) => void;
-  pickedFiles: any;
-  setCanUpload: any;
-  uploadPercentage: any;
   fileUniqueID: any;
 };
 
@@ -37,36 +35,38 @@ export default function FileList({
   const [formatTo, setFormatTo] = useState('...');
   const [showModal, setShowModal] = useState(false);
 
+  useEffect(() => {
+    const upload = pickedFiles.every((file) => file.formatTo);
+    setCanUpload(upload);
+  }, [pickedFiles, setCanUpload]);
+
   if (!fileDetail) return;
   const { name, size, lastModified } = fileDetail.file;
 
-  let findFile = uploadPercentage.find((item) => {
+  let findFile = uploadPercentage.find((item: any) => {
     return fileUniqueID === item.fileUniqueID;
   });
 
-  const progressUploadFile = Math.round(findFile?.progress * 100);
+  const progressUploadFile = findFile && Math.round(findFile.progress * 100);
 
   function handleRemoveFile() {
-    const deletedFile = pickedFiles.filter((item) => {
-      console.log(item.fileUniqueID, fileUniqueID);
+    const deletedFile = pickedFiles.filter((item: any) => {
       return item.fileUniqueID !== fileUniqueID;
     });
 
     setPickedFiles(deletedFile);
   }
 
-  function handleFormatTo(to) {
+  function handleFormatTo(to: string) {
     setIsFormatShowing(false);
     setFormatTo(to);
 
-    setPickedFiles((file) =>
-      file.map((item) =>
+    setPickedFiles((file: PickedFilesType[]) =>
+      file.map((item: PickedFilesType) =>
         item.fileUniqueID === fileUniqueID ? { ...item, formatTo: to } : item
       )
     );
   }
-  const upload = pickedFiles.every((file) => file.formatTo);
-  setCanUpload(upload);
 
   return (
     <>
@@ -101,7 +101,7 @@ export default function FileList({
                   initState={true}
                 />
                 <div className='grid grid-cols-3'>
-                  {filterBySearch.map((format, i) => {
+                  {filterBySearch.map((format: string, i: number) => {
                     return (
                       <FormatLists
                         key={i}
@@ -118,7 +118,7 @@ export default function FileList({
           )}
         </div>
 
-        {findFile.started ? (
+        {findFile?.started ? (
           <div className='w-3/4 bg-theme-fontGray rounded-full'>
             <div
               className={`bg-theme-purpleSecondary text-xs font-medium text-theme-white text-center p-0.5 leading-none rounded-full`}

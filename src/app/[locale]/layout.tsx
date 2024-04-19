@@ -3,10 +3,7 @@ import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import Form from '@/components/Form';
-import Heading from '@/components/Heading';
-import Button from '@/components/Button';
-import FilePickerContainer from '@/components/FilePickerContainer';
+import FilePickerContainer from '@/components/fileHandler/FilePickerContainer';
 
 const inter = Inter({ subsets: ['latin'] });
 const plusJakarta = Plus_Jakarta_Sans({

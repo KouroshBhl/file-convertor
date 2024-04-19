@@ -1,7 +1,7 @@
 'use client';
 
-import { FilePickerWrapperContext } from '../context/filePicker.js';
-import FilePicker from './FilePicker.jsx';
+import { FilePickerWrapperContext } from '../../context/FilePickerContext';
+import FilePicker from './FilePicker';
 
 function FilePickerContainer() {
   return (

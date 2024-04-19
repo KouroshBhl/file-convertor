@@ -1,21 +1,31 @@
 import { useState } from 'react';
 import FormatsContainer from './FormatsContainer';
-import Loader from './Loader';
+import Loader from '../ui/Loader';
 import { HiMiniChevronRight } from 'react-icons/hi2';
 import ShowFormatsFrom from './ShowFormatsFrom';
 import SearchFormats from './SearchFormats';
-import { useFilePicker } from '../context/filePicker';
+import { useFilePicker } from '../../context/FilePickerContext';
 
-function ConversionPickup({ uniqueGroup, allFormats, setFromFormatDetect }) {
+type ConversionPickupProps = {
+  uniqueGroup: string[];
+  allFormats: any[];
+  setFromFormatDetect: (value: string) => void;
+};
+
+function ConversionPickup({
+  uniqueGroup,
+  allFormats,
+  setFromFormatDetect,
+}: ConversionPickupProps) {
   const [groupDetect, setGroupDetect] = useState('Microsoft Office');
   const [filterBySearch, setFilterBySearch] = useState([]);
   const { setShowFrom } = useFilePicker();
 
-  function handleDetectGroupFormat(e) {
+  function handleDetectGroupFormat(e: any) {
     setGroupDetect(e.target.getAttribute('data-value'));
   }
 
-  function handleDetectFormat(e) {
+  function handleDetectFormat(e: any) {
     setFromFormatDetect(e.target.getAttribute('data-value'));
     setShowFrom(false);
   }

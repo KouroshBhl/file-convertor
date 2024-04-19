@@ -1,19 +1,18 @@
 import path from 'path';
-import React, { useId, useRef, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useRef } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
-import ConversionFormatsGroup from './ConversionFormatsGroup.jsx';
-import FileList from './FileList.tsx';
+import ConversionFormatsGroup from './ConversionFormatsGroup';
+import FileList from './FileList';
 import { getConvertorFormats } from '@/utils/actions';
-import Button from './Button.tsx';
-import Loader from './Loader.tsx';
-import SubmitFiles from './SubmitFiles.jsx';
-import { toBase64 } from '../utils/helpers/toBase64.ts';
-import { useFilePicker } from '../context/filePicker.js';
+import Button from '../ui/Button';
+import Loader from '../ui/Loader';
+import SubmitFiles from './SubmitFiles';
+import { toBase64 } from '../../utils/helpers/toBase64';
+import { useFilePicker } from '../../context/FilePickerContext';
 
 export default function FilePicker() {
-  // const fileUniqueID = useId();
-  const filePickerRef = useRef(null);
+  const filePickerRef = useRef<HTMLInputElement>(null);
   const {
     setIsError,
     setIsLoading,
@@ -26,10 +25,10 @@ export default function FilePicker() {
 
   function handlePickClick() {
     setIsError(false);
-    filePickerRef.current.click();
+    if (filePickerRef.current) filePickerRef.current.click();
   }
 
-  async function handlePickedFile(e) {
+  async function handlePickedFile(e: ChangeEvent<HTMLInputElement>) {
     setIsError(false);
 
     try {
@@ -40,13 +39,13 @@ export default function FilePicker() {
 
       const ArrayFiles = Array.from(file);
 
-      const fileTypes = ArrayFiles.map(async (file) => {
+      const fileTypes = ArrayFiles.map(async (file: any) => {
         const extname = path
           .extname(file.name)
           .split('.')[1]
           .toLocaleLowerCase();
         const supported = await getConvertorFormats(extname);
-        const base64 = await toBase64(file);
+        const base64: any = await toBase64(file);
         if (!supported) {
           toast.error(`Sorry ${extname} format is not supported yet!`, {
             position: 'top-center',
@@ -56,7 +55,7 @@ export default function FilePicker() {
           });
           return;
         }
-        setUploadPercentage((prevFiles) => {
+        setUploadPercentage((prevFiles: any) => {
           return [
             ...prevFiles,
             {
@@ -85,12 +84,12 @@ export default function FilePicker() {
         const deleteNull = values.filter((value) => value);
 
         if (deleteNull.length !== 0)
-          setPickedFiles((prevFiles) => [...prevFiles, ...deleteNull]);
+          setPickedFiles((prevFiles: any) => [...prevFiles, ...deleteNull]);
       });
 
       setIsLoading(false);
       setCanUpload(false);
-    } catch (error) {
+    } catch (error: any) {
       toast.error(`Sorry, ${error.message} format is not supported yet!`, {
         position: 'top-center',
         style: {

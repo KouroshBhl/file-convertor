@@ -1,32 +1,33 @@
-import { getAllConversions } from '@/utils/actions';
 import React, { useEffect, useState } from 'react';
-import ConversionPickup from './ConversionPickup';
-import FormatsContainer from './FormatsContainer';
 import Link from 'next/link';
+
 import { HiMiniChevronDown } from 'react-icons/hi2';
-import { useFilePicker } from '../context/filePicker';
+
+import { useFilePicker } from '../../context/FilePickerContext';
+import { getAllConversions } from '@/utils/actions';
+import FormatsContainer from './FormatsContainer';
+import ConversionPickup from './ConversionPickup';
 
 export default function ConversionFormatsGroup() {
   const { showFrom, setShowFrom, showTo, setShowTo } = useFilePicker();
-
   const [allFormats, setAllFormats] = useState([]);
   const [fromFormatDetect, setFromFormatDetect] = useState('pdf');
   const [toFormatDetect, setToFormatDetect] = useState('...');
-
   const [formatTo, setFormatTo] = useState([]);
 
   function handleShowFrom() {
-    setShowFrom((prev) => !prev);
+    setShowFrom((prev: boolean) => !prev);
   }
   function handleShowTo() {
-    setShowTo((prev) => !prev);
+    setShowTo((prev: boolean) => !prev);
   }
 
   useEffect(() => {
     async function getData() {
       const data = await getAllConversions(true, true, true);
       const dataArray = data.split(',').slice(0, -1);
-      const formatFromTo = dataArray.map((format) => {
+
+      const formatFromTo = dataArray.map((format: string) => {
         const fromTo = format.split('+');
         return { from: fromTo[0], to: fromTo[1], group: fromTo[2] };
       });
@@ -36,13 +37,13 @@ export default function ConversionFormatsGroup() {
   }, []);
 
   useEffect(() => {
-    const filtered = allFormats.filter((format) => {
+    const filtered = allFormats.filter((format: { from: string }) => {
       return format.from === fromFormatDetect;
     });
     setFormatTo(filtered);
   }, [fromFormatDetect, allFormats]);
 
-  const groups = allFormats.map((item) => {
+  const groups = allFormats.map((item: { group: string }) => {
     if (item.group === 'PDF Document' || item.group === 'PDF Image')
       return 'PDF Tools';
     return item.group;
@@ -81,7 +82,7 @@ export default function ConversionFormatsGroup() {
         {showTo && (
           <FormatsContainer width='[24rem]'>
             <ul className='grid grid-cols-3'>
-              {formatTo.map((format, i) => {
+              {formatTo.map((format: { to: string }, i) => {
                 return (
                   <li
                     className='flex justify-center items-center bg-theme-darkGray_2 px-1 py-2 m-2 rounded hover:cursor-pointer text-wrap'
