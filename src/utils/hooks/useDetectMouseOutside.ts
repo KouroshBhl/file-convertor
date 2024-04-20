@@ -5,6 +5,7 @@ export function useDetectOutside(
   listenCapturing: boolean = true
 ) {
   const ref = useRef<HTMLDivElement | null>(null);
+  console.log(typeof handler);
 
   useEffect(
     function () {

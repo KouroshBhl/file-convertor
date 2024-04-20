@@ -29,7 +29,6 @@ export default function FileList({
 }: FileListProps) {
   const { uploadPercentage, setCanUpload, pickedFiles, setPickedFiles } =
     useFilePicker();
-
   const [filterBySearch, setFilterBySearch] = useState(supportedFormats);
   const [isFormatShowing, setIsFormatShowing] = useState(false);
   const [formatTo, setFormatTo] = useState('...');

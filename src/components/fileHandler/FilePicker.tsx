@@ -1,5 +1,5 @@
 import path from 'path';
-import React, { ChangeEvent, FormEvent, useRef } from 'react';
+import React, { ChangeEvent, useRef } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 import ConversionFormatsGroup from './ConversionFormatsGroup';
@@ -13,6 +13,7 @@ import { useFilePicker } from '../../context/FilePickerContext';
 
 export default function FilePicker() {
   const filePickerRef = useRef<HTMLInputElement>(null);
+
   const {
     setIsError,
     setIsLoading,
