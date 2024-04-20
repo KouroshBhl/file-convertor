@@ -9,11 +9,13 @@ import FormatsContainer from './FormatsContainer';
 import ConversionPickup from './ConversionPickup';
 
 export default function ConversionFormatsGroup() {
-  const { showFrom, setShowFrom, showTo, setShowTo } = useFilePicker();
+  const { state, dispatch } = useFilePicker();
   const [allFormats, setAllFormats] = useState([]);
   const [fromFormatDetect, setFromFormatDetect] = useState('pdf');
   const [toFormatDetect, setToFormatDetect] = useState('...');
   const [formatTo, setFormatTo] = useState([]);
+  const [showFrom, setShowFrom] = useState(false);
+  const [showTo, setShowTo] = useState(false);
 
   function handleShowFrom() {
     setShowFrom((prev: boolean) => !prev);

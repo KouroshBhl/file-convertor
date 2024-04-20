@@ -3,13 +3,13 @@ import Button from '../ui/Button';
 import axios, { AxiosResponse } from 'axios';
 import { useFilePicker } from '../../context/FilePickerContext';
 import { convertAPIVersion, converAPIDomain } from '../../utils/domains';
+import { ActionDomain } from '@/utils/fileReducer';
 
 function SubmitFiles() {
   const [resultPromises, setResultPromises] = useState<
     Promise<AxiosResponse<any, any>>[]
   >([]);
-  const { canUpload, pickedFiles, setUploadPercentage, uploadPercentage } =
-    useFilePicker();
+  const { state, dispatch } = useFilePicker();
 
   useEffect(() => {
     if (resultPromises.length === 0) return;
@@ -17,11 +17,7 @@ function SubmitFiles() {
   }, [resultPromises]);
 
   async function handleSubmitFiles() {
-    for (const file of pickedFiles) {
-      let findFile = uploadPercentage.find(
-        (item) => item.fileUniqueID === file.fileUniqueID
-      );
-
+    for (const file of state.pickedFiles) {
       const data = axios.post(
         `https://${convertAPIVersion}.${converAPIDomain}/convert/${file.extname}/to/${file.formatTo}?Secret=IqyDEpBdFe1Kucn0`,
         {
@@ -51,22 +47,9 @@ function SubmitFiles() {
 
         {
           onUploadProgress: function (progressEvent) {
-            setUploadPercentage((prevFiles: any) => {
-              const updatedFiles = prevFiles.map(
-                (file: { fileUniqueID: number }) => {
-                  if (file.fileUniqueID === findFile?.fileUniqueID) {
-                    return {
-                      ...file,
-                      estimated: progressEvent.estimated,
-                      loaded: progressEvent.loaded,
-                      progress: progressEvent.progress,
-                      started: true,
-                    };
-                  }
-                  return file;
-                }
-              );
-              return updatedFiles;
+            dispatch({
+              type: ActionDomain.SET_FILE_UPLOAD_STATUS,
+              payload: { progressEvent, fileUniqueID: file.fileUniqueId },
             });
           },
         }
@@ -78,7 +61,7 @@ function SubmitFiles() {
   return (
     <Button
       isSelector={false}
-      disabled={!canUpload}
+      disabled={!state.pickedFiles.every((file) => file.formatTo)}
       onClick={handleSubmitFiles}
       type='button'
     >

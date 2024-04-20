@@ -19,7 +19,7 @@ function ConversionPickup({
 }: ConversionPickupProps) {
   const [groupDetect, setGroupDetect] = useState('Microsoft Office');
   const [filterBySearch, setFilterBySearch] = useState([]);
-  const { setShowFrom } = useFilePicker();
+  // const { setShowFrom } = useFilePicker();
 
   function handleDetectGroupFormat(e: any) {
     setGroupDetect(e.target.getAttribute('data-value'));
@@ -27,7 +27,7 @@ function ConversionPickup({
 
   function handleDetectFormat(e: any) {
     setFromFormatDetect(e.target.getAttribute('data-value'));
-    setShowFrom(false);
+    // setShowFrom(false);
   }
 
   const filterByGroup = allFormats.filter((format) => {

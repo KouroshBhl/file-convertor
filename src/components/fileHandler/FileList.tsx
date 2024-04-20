@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { IoMdClose } from 'react-icons/io';
 import { FiSettings } from 'react-icons/fi';
 import { HiMiniChevronDown } from 'react-icons/hi2';
+import { ActionDomain } from '../../utils/fileReducer';
 
-import {
-  type PickedFilesType,
-  useFilePicker,
-} from '../../context/FilePickerContext';
+import { useFilePicker } from '../../context/FilePickerContext';
 import FormatsContainer from './FormatsContainer';
 import FormatLists from './FormatLists';
 import SearchFormats from './SearchFormats';
@@ -17,54 +15,40 @@ import FileOptions from './FileOptions';
 type FileListProps = {
   supportedFormats: any;
   type: string;
-  fileDetail: any;
-  fileUniqueID: any;
+  file: File;
+  fileUniqueId: string;
+  uploadStarted: boolean;
+  uploadProgress: number;
+  formatTo: string | null;
 };
 
 export default function FileList({
   supportedFormats,
   type,
-  fileDetail,
-  fileUniqueID,
+  file,
+  fileUniqueId,
+  uploadStarted,
+  uploadProgress,
+  formatTo,
 }: FileListProps) {
-  const { uploadPercentage, setCanUpload, pickedFiles, setPickedFiles } =
-    useFilePicker();
+  const { dispatch } = useFilePicker();
   const [filterBySearch, setFilterBySearch] = useState(supportedFormats);
   const [isFormatShowing, setIsFormatShowing] = useState(false);
-  const [formatTo, setFormatTo] = useState('...');
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    const upload = pickedFiles.every((file) => file.formatTo);
-    setCanUpload(upload);
-  }, [pickedFiles, setCanUpload]);
-
-  if (!fileDetail) return;
-  const { name, size, lastModified } = fileDetail.file;
-
-  let findFile = uploadPercentage.find((item: any) => {
-    return fileUniqueID === item.fileUniqueID;
-  });
-
-  const progressUploadFile = findFile && Math.round(findFile.progress * 100);
+  if (!file) return;
+  const { name, size } = file;
 
   function handleRemoveFile() {
-    const deletedFile = pickedFiles.filter((item: any) => {
-      return item.fileUniqueID !== fileUniqueID;
-    });
-
-    setPickedFiles(deletedFile);
+    dispatch({ type: ActionDomain.HANDLE_REMOVE_FILE, payload: fileUniqueId });
   }
 
   function handleFormatTo(to: string) {
+    dispatch({
+      type: ActionDomain.SET_FORMAT_TO,
+      payload: { fileUniqueId, to },
+    });
     setIsFormatShowing(false);
-    setFormatTo(to);
-
-    setPickedFiles((file: PickedFilesType[]) =>
-      file.map((item: PickedFilesType) =>
-        item.fileUniqueID === fileUniqueID ? { ...item, formatTo: to } : item
-      )
-    );
   }
 
   return (
@@ -74,7 +58,7 @@ export default function FileList({
           formatTo={formatTo}
           type={type}
           setShowModal={setShowModal}
-          fileId={lastModified}
+          fileUniqueId={fileUniqueId}
         />
       )}
       <li className='grid grid-cols-[4rem,3fr,1fr,1.5fr,1fr,4rem,4rem] text-base items-center py-2'>
@@ -87,7 +71,7 @@ export default function FileList({
               className='bg-theme-lightGray_2 px-2 py-1 rounded font-semibold text-sm flex justify-center items-center gap-1 hover:cursor-pointer'
               onClick={() => setIsFormatShowing((prev) => !prev)}
             >
-              <b>{formatTo.toLocaleUpperCase()}</b>
+              <b>{formatTo ? formatTo.toLocaleUpperCase() : '...'}</b>
               <HiMiniChevronDown className='text-lg' />
             </div>
           </div>
@@ -117,29 +101,29 @@ export default function FileList({
           )}
         </div>
 
-        {findFile?.started ? (
+        {uploadStarted ? (
           <div className='w-3/4 bg-theme-fontGray rounded-full'>
             <div
               className={`bg-theme-purpleSecondary text-xs font-medium text-theme-white text-center p-0.5 leading-none rounded-full`}
-              style={{ width: `${progressUploadFile}%` }}
+              style={{ width: `${uploadProgress}%` }}
             >
-              {progressUploadFile}%
+              {uploadProgress}%
             </div>
           </div>
         ) : (
           <div
             className={`${
-              fileDetail.formatTo ? 'bg-green-500' : 'bg-red-500'
+              formatTo ? 'bg-green-500' : 'bg-red-500'
             } w-2/3 flex justify-center items-center rounded py-1'`}
           >
             <span className='text-white text-sm font-semibold'>
-              {fileDetail.formatTo ? 'Ready' : 'Choose Output'}
+              {formatTo ? 'Ready' : 'Choose Output'}
             </span>
           </div>
         )}
         <span className='text-sm font-semibold'>{formatByte(size)}</span>
         <div>
-          {fileDetail.formatTo && (
+          {formatTo && (
             <FiSettings
               onClick={() => setShowModal(true)}
               className='text-lg'

@@ -1,20 +1,19 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+
+import { ActionDomain } from '../../utils/fileReducer';
 import { useDetectOutside } from '../../utils/hooks/useDetectMouseOutside';
 import { convertAPIVersion, converAPIDomain } from '../../utils/domains';
 import { useForm } from 'react-hook-form';
 import { FaInfo } from 'react-icons/fa';
 import Button from '../ui/Button';
-import {
-  useFilePicker,
-  type PickedFilesType,
-} from '../../context/FilePickerContext';
+import { useFilePicker } from '../../context/FilePickerContext';
 
 type FileOptionsProps = {
-  formatTo: string;
+  formatTo: string | null;
   type: string;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  fileId: number;
+  fileUniqueId: string;
 };
 
 type ParamsType = {
@@ -40,13 +39,12 @@ function FileOptions({
   formatTo,
   type,
   setShowModal,
-  fileId,
+  fileUniqueId,
 }: FileOptionsProps) {
   const ref = useDetectOutside(setShowModal);
+  const { dispatch } = useFilePicker();
   const [fileOptions, setFileOptions] = useState([]);
   const [showDescription, setShowDescription] = useState('');
-  const { setPickedFiles } = useFilePicker();
-
   const { register, handleSubmit } = useForm();
 
   function onSubmit(data: { [key: string]: string }) {
@@ -62,14 +60,9 @@ function FileOptions({
       }
     }
 
-    setPickedFiles((prev: PickedFilesType[]) => {
-      const updatedParameters = prev.map((file: any) => {
-        if (file.file.lastModified === fileId) {
-          return { ...file, parameters: params };
-        }
-        return file;
-      });
-      return updatedParameters;
+    dispatch({
+      type: ActionDomain.SET_FILE_PARAMETERS,
+      payload: { fileUniqueId, params },
     });
 
     setShowModal(false);
@@ -102,7 +95,6 @@ function FileOptions({
         parameters = getOptions[0].ConverterParameters;
       }
 
-      console.log(parameters);
       setFileOptions(parameters);
     }
     getConversionOptions();
