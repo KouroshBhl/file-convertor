@@ -69,16 +69,18 @@ export default function FileList({
         <Image alt='icon' src={`/icons/${type}.svg`} width={32} height={32} />
         <span>{name}</span>
         <div>
-          <div className='flex gap-4 items-center'>
-            <b>to</b>
-            <div
-              className='bg-theme-lightGray_2 px-2 py-1 rounded font-semibold text-sm flex justify-center items-center gap-1 hover:cursor-pointer'
-              onClick={() => setIsFormatShowing((prev) => !prev)}
-            >
-              <b>{formatTo ? formatTo.toLocaleUpperCase() : '...'}</b>
-              <HiMiniChevronDown className='text-lg' />
+          {!results.isResults && (
+            <div className='flex gap-4 items-center'>
+              <b>to</b>
+              <div
+                className='bg-theme-lightGray_2 px-2 py-1 rounded font-semibold text-sm flex justify-center items-center gap-1 hover:cursor-pointer'
+                onClick={() => setIsFormatShowing((prev) => !prev)}
+              >
+                <b>{formatTo ? formatTo.toLocaleUpperCase() : '...'}</b>
+                <HiMiniChevronDown className='text-lg' />
+              </div>
             </div>
-          </div>
+          )}
           {isFormatShowing && (
             <div className='relative' ref={ref}>
               <FormatsContainer

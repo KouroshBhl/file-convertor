@@ -50,7 +50,7 @@ function SubmitFiles() {
           onUploadProgress: function (progressEvent) {
             dispatch({
               type: ActionDomain.SET_FILE_UPLOAD_STATUS,
-              payload: { progressEvent, fileUniqueID: file.fileUniqueId },
+              payload: { progressEvent, fileUniqueId: file.fileUniqueId },
             });
           },
         }

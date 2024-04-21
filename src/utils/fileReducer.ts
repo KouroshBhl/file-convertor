@@ -61,7 +61,7 @@ interface SetFileParametersAction {
 }
 interface SetFileUploadStatusAction {
   type: ActionDomain.SET_FILE_UPLOAD_STATUS;
-  payload: { ProgressEvent: any; fileUniqueId: string };
+  payload: { progressEvent: any; fileUniqueId: string };
 }
 interface SetFileResultsAction {
   type: ActionDomain.SET_FILE_RESULTS;
@@ -136,8 +136,10 @@ export function fileReducer(state: StateType, action: ActionType) {
             ? {
                 ...file,
                 uploadStarted: true,
-                uploadProgress: payload.ProgressEvent.progress,
-                uploadEstimated: payload.ProgressEvent.estimated,
+                uploadProgress: Math.round(
+                  payload.progressEvent.progress * 100
+                ),
+                uploadEstimated: payload.progressEvent.estimated,
               }
             : file
         ),
