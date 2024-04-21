@@ -6,21 +6,22 @@ import { convertAPIVersion, converAPIDomain } from '../../utils/domains';
 import { ActionDomain } from '@/utils/fileReducer';
 
 function SubmitFiles() {
-  const [resultPromises, setResultPromises] = useState<
-    Promise<AxiosResponse<any, any>>[]
-  >([]);
+  const [resultPromises, setResultPromises] = useState<any>([]);
   const { state, dispatch } = useFilePicker();
 
   useEffect(() => {
     if (resultPromises.length === 0) return;
-    Promise.all(resultPromises).then((result) => console.log(result));
-  }, [resultPromises]);
+    Promise.all(resultPromises).then((result) =>
+      dispatch({ type: ActionDomain.SET_FILE_RESULTS, payload: result })
+    );
+  }, [resultPromises, dispatch]);
 
   async function handleSubmitFiles() {
     for (const file of state.pickedFiles) {
       const data = axios.post(
-        `https://${convertAPIVersion}.${converAPIDomain}/convert/${file.extname}/to/${file.formatTo}?Secret=IqyDEpBdFe1Kucn0`,
+        `https://${convertAPIVersion}.${converAPIDomain}/convert/${file.extname}/to/${file.formatTo}?Secret=QopEu484oe52NgiV`,
         {
+          fileUniqueID: file.fileUniqueId,
           Parameters: [
             {
               Name: 'File',
@@ -54,6 +55,10 @@ function SubmitFiles() {
           },
         }
       );
+      // dispatch({
+      //   type: ActionDomain.SET_FILE_RESULTS,
+      //   payload: { data, fileUniqueId: file.fileUniqueId },
+      // });
       setResultPromises((prevPromises: any) => [...prevPromises, data]);
     }
   }

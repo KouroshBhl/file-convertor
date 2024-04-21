@@ -11,6 +11,7 @@ import FormatLists from './FormatLists';
 import SearchFormats from './SearchFormats';
 import formatByte from '../../utils/helpers/formatByte';
 import FileOptions from './FileOptions';
+import { useDetectOutside } from '@/utils/hooks/useDetectMouseOutside';
 
 type FileListProps = {
   supportedFormats: any;
@@ -20,6 +21,7 @@ type FileListProps = {
   uploadStarted: boolean;
   uploadProgress: number;
   formatTo: string | null;
+  results?: any;
 };
 
 export default function FileList({
@@ -30,11 +32,13 @@ export default function FileList({
   uploadStarted,
   uploadProgress,
   formatTo,
+  results,
 }: FileListProps) {
   const { dispatch } = useFilePicker();
   const [filterBySearch, setFilterBySearch] = useState(supportedFormats);
   const [isFormatShowing, setIsFormatShowing] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const ref = useDetectOutside(setIsFormatShowing);
 
   if (!file) return;
   const { name, size } = file;
@@ -76,8 +80,11 @@ export default function FileList({
             </div>
           </div>
           {isFormatShowing && (
-            <div className='relative'>
-              <FormatsContainer className='absolute top-2'>
+            <div className='relative' ref={ref}>
+              <FormatsContainer
+                className='absolute top-2'
+                setIsFormatShowing={setIsFormatShowing}
+              >
                 <SearchFormats
                   formats={supportedFormats}
                   setter={setFilterBySearch}
@@ -117,25 +124,38 @@ export default function FileList({
             } w-2/3 flex justify-center items-center rounded py-1'`}
           >
             <span className='text-white text-sm font-semibold'>
-              {formatTo ? 'Ready' : 'Choose Output'}
+              {/* {formatTo ? 'Ready' : 'Choose Output'} */}
+              {!formatTo && 'Choose Output'}
+              {formatTo && !results.isResults && 'Ready'}
+              {results.isResults && 'Completed'}
             </span>
           </div>
         )}
-        <span className='text-sm font-semibold'>{formatByte(size)}</span>
+        <span className='text-sm font-semibold'>
+          {!results.isResults ? formatByte(size) : formatByte(results.FileSize)}
+        </span>
         <div>
-          {formatTo && (
+          {formatTo && !results.isResults && (
             <FiSettings
               onClick={() => setShowModal(true)}
               className='text-lg'
             />
           )}
         </div>
-        <div
-          onClick={handleRemoveFile}
-          className='hover:cursor-pointer hover:text-theme-fontRed_4 transition-all delay-100 ease-in-out'
-        >
-          <IoMdClose className='text-lg' />
-        </div>
+        {!results.isResults && (
+          <div
+            onClick={handleRemoveFile}
+            className='hover:cursor-pointer hover:text-theme-fontRed_4 transition-all delay-100 ease-in-out'
+          >
+            <IoMdClose className='text-lg' />
+          </div>
+        )}
+
+        {results.isResults && (
+          <div>
+            <a href={results.Url}>Download</a>
+          </div>
+        )}
       </li>
     </>
   );

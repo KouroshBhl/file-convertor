@@ -6,6 +6,7 @@ export enum ActionDomain {
   SET_FORMAT_TO = 'SET_FORMAT_TO',
   SET_FILE_PARAMETERS = 'SET_FILE_PARAMETERS',
   SET_FILE_UPLOAD_STATUS = 'SET_FILE_UPLOAD_STATUS',
+  SET_FILE_RESULTS = 'SET_FILE_RESULTS',
 }
 
 export interface FileType {
@@ -16,7 +17,14 @@ export interface FileType {
   base64: string;
   formatTo: string | null;
   parameters: string[];
-  results: {};
+  results: {
+    isResults: boolean;
+    FileExt: string;
+    FileId: string;
+    FileName: string;
+    FileSize: number;
+    Url: string;
+  };
   isError: boolean;
   isLoading: boolean;
   showFrom: boolean;
@@ -55,6 +63,10 @@ interface SetFileUploadStatusAction {
   type: ActionDomain.SET_FILE_UPLOAD_STATUS;
   payload: { ProgressEvent: any; fileUniqueId: string };
 }
+interface SetFileResultsAction {
+  type: ActionDomain.SET_FILE_RESULTS;
+  payload: any[];
+}
 
 export type ActionType =
   | SelectFilesAction
@@ -63,7 +75,8 @@ export type ActionType =
   | HandleRemoveFileAction
   | SetFormatToAction
   | SetFileParametersAction
-  | SetFileUploadStatusAction;
+  | SetFileUploadStatusAction
+  | SetFileResultsAction;
 
 export interface StateType {
   pickedFiles: FileType[];
@@ -125,6 +138,30 @@ export function fileReducer(state: StateType, action: ActionType) {
                 uploadStarted: true,
                 uploadProgress: payload.ProgressEvent.progress,
                 uploadEstimated: payload.ProgressEvent.estimated,
+              }
+            : file
+        ),
+      };
+
+    case ActionDomain.SET_FILE_RESULTS:
+      const formatResults = payload.reduce((acc, curr) => {
+        const { data, config } = curr;
+        return [
+          ...acc,
+          {
+            file: data.Files[0],
+            fileUniqueId: JSON.parse(config.data).fileUniqueID,
+          },
+        ];
+      }, []);
+      console.log(formatResults);
+      return {
+        ...state,
+        pickedFiles: state.pickedFiles.map((file, i) =>
+          file.fileUniqueId === formatResults[i].fileUniqueId
+            ? {
+                ...file,
+                results: { ...formatResults[i].file, isResults: true },
               }
             : file
         ),

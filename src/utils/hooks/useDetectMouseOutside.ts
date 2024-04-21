@@ -1,11 +1,10 @@
 import { useEffect, useRef } from 'react';
 
 export function useDetectOutside(
-  handler: any,
+  handler: Array<Function> | Function,
   listenCapturing: boolean = true
 ) {
   const ref = useRef<HTMLDivElement | null>(null);
-  console.log(typeof handler);
 
   useEffect(
     function () {

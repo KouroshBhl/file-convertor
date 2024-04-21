@@ -2,17 +2,16 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import React, { ChangeEvent, useRef } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-
 import { ActionDomain } from '@/utils/fileReducer';
+import { toBase64 } from '../../utils/helpers/toBase64';
 
+import { useFilePicker } from '../../context/FilePickerContext';
+import { getConvertorFormats } from '@/utils/actions';
 import ConversionFormatsGroup from './ConversionFormatsGroup';
 import FileList from './FileList';
-import { getConvertorFormats } from '@/utils/actions';
 import Button from '../ui/Button';
 import Loader from '../ui/Loader';
 import SubmitFiles from './SubmitFiles';
-import { toBase64 } from '../../utils/helpers/toBase64';
-import { useFilePicker } from '../../context/FilePickerContext';
 
 export default function FilePicker() {
   const filePickerRef = useRef<HTMLInputElement>(null);
@@ -59,7 +58,14 @@ export default function FilePicker() {
           formatTo: null,
           base64: base64.split(',')[1],
           parameters: [],
-          results: {},
+          results: {
+            isResults: false,
+            FileExt: '',
+            FileId: '',
+            FileName: '',
+            FileSize: 0,
+            Url: '',
+          },
           fileUniqueId: uuidv4(),
           isError: false,
           isLoading: false,
@@ -120,6 +126,7 @@ export default function FilePicker() {
               uploadStarted,
               uploadProgress,
               formatTo,
+              results,
             } = item;
 
             return (
@@ -132,6 +139,7 @@ export default function FilePicker() {
                 uploadStarted={uploadStarted}
                 uploadProgress={uploadProgress}
                 formatTo={formatTo}
+                results={results}
               />
             );
           })}

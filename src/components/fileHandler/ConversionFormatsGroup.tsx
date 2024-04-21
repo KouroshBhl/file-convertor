@@ -3,19 +3,19 @@ import Link from 'next/link';
 
 import { HiMiniChevronDown } from 'react-icons/hi2';
 
-import { useFilePicker } from '../../context/FilePickerContext';
 import { getAllConversions } from '@/utils/actions';
 import FormatsContainer from './FormatsContainer';
 import ConversionPickup from './ConversionPickup';
+import { useDetectOutside } from '@/utils/hooks/useDetectMouseOutside';
 
 export default function ConversionFormatsGroup() {
-  const { state, dispatch } = useFilePicker();
   const [allFormats, setAllFormats] = useState([]);
   const [fromFormatDetect, setFromFormatDetect] = useState('pdf');
   const [toFormatDetect, setToFormatDetect] = useState('...');
   const [formatTo, setFormatTo] = useState([]);
   const [showFrom, setShowFrom] = useState(false);
   const [showTo, setShowTo] = useState(false);
+  const ref = useDetectOutside(setShowTo);
 
   function handleShowFrom() {
     setShowFrom((prev: boolean) => !prev);
@@ -68,6 +68,7 @@ export default function ConversionFormatsGroup() {
             uniqueGroup={uniqueGroup}
             allFormats={allFormats}
             setFromFormatDetect={setFromFormatDetect}
+            setShowFrom={setShowFrom}
           />
         )}
       </div>
@@ -82,27 +83,29 @@ export default function ConversionFormatsGroup() {
         </div>
 
         {showTo && (
-          <FormatsContainer width='[24rem]'>
-            <ul className='grid grid-cols-3'>
-              {formatTo.map((format: { to: string }, i) => {
-                return (
-                  <li
-                    className='flex justify-center items-center bg-theme-darkGray_2 px-1 py-2 m-2 rounded hover:cursor-pointer text-wrap'
-                    key={i}
-                    onClick={() => {
-                      setToFormatDetect(format.to);
-                      setShowFrom(false);
-                      setShowTo(false);
-                    }}
-                  >
-                    <Link href={`${fromFormatDetect}-to-${format.to}`}>
-                      {format.to.toUpperCase()}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </FormatsContainer>
+          <div ref={ref}>
+            <FormatsContainer width='[24rem]'>
+              <ul className='grid grid-cols-3'>
+                {formatTo.map((format: { to: string }, i) => {
+                  return (
+                    <li
+                      className='flex justify-center items-center bg-theme-darkGray_2 px-1 py-2 m-2 rounded hover:cursor-pointer text-wrap'
+                      key={i}
+                      onClick={() => {
+                        setToFormatDetect(format.to);
+                        setShowFrom(false);
+                        setShowTo(false);
+                      }}
+                    >
+                      <Link href={`${fromFormatDetect}-to-${format.to}`}>
+                        {format.to.toUpperCase()}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </FormatsContainer>
+          </div>
         )}
       </div>
     </div>
