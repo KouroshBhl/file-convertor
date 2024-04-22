@@ -15,6 +15,10 @@ const initialState: StateType = {
   pickedFiles: [],
   isLoading: false,
   isError: false,
+  fileResults: {
+    isCompleted: false,
+    files: [],
+  },
 };
 
 const AppContext = createContext<{

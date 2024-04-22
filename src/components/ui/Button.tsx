@@ -27,13 +27,13 @@ export default function Button({
 }: ButtonProps) {
   return (
     <div
-      className={`${className} flex justify-between text-theme-white font-semibold text-base`}
+      className={`${className} flex justify-between text-theme-white font-semibold text-base w-4/5 sm:w-2/5`}
     >
       <button
         type={type}
         className={`bg-theme-fontRed_2 px-10 py-4 hover:bg-theme-fontRed_1 rounded-l-md ${
           !isSelector ? 'rounded-r-md' : ''
-        } transition-all duration-300 disabled:bg-theme-fontRed_1 disabled:cursor-not-allowed`}
+        } transition-all duration-300 disabled:bg-theme-fontRed_1 disabled:cursor-not-allowed w-full`}
         onClick={onClick}
         disabled={disabled}
       >

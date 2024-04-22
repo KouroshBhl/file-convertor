@@ -1,7 +1,6 @@
 'use client';
 
 import React, { ReactNode } from 'react';
-import { usePathname } from 'next/navigation';
 
 type FormProps = {
   children: ReactNode;
@@ -9,10 +8,6 @@ type FormProps = {
 };
 
 export default function Form({ children, action }: FormProps) {
-  const pathName = usePathname();
-
-  if (pathName.includes('about')) return;
-
   return (
     <form
       action={action}

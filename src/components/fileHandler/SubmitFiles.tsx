@@ -55,10 +55,6 @@ function SubmitFiles() {
           },
         }
       );
-      // dispatch({
-      //   type: ActionDomain.SET_FILE_RESULTS,
-      //   payload: { data, fileUniqueId: file.fileUniqueId },
-      // });
       setResultPromises((prevPromises: any) => [...prevPromises, data]);
     }
   }

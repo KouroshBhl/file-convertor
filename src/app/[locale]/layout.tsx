@@ -30,14 +30,12 @@ export default function RootLayout({
   return (
     <html lang={locale}>
       <body
-        className={`${plusJakarta.className} text-theme-fontDark font-normal`}
+        className={`${plusJakarta.className} text-theme-fontDark font-normal fixed w-full`}
       >
         <Header />
 
         <main className='relative'>
-          <div className='h-1/4 bg-theme-lightGray w-full flex gap-12 flex-col justify-center items-center py-44'>
-            <FilePickerContainer />
-          </div>
+          <FilePickerContainer />
           {children}
         </main>
         <Footer />

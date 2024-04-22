@@ -65,11 +65,17 @@ export default function FileList({
           fileUniqueId={fileUniqueId}
         />
       )}
-      <li className='grid grid-cols-[4rem,3fr,1fr,1.5fr,1fr,4rem,4rem] text-base items-center py-2'>
+      <li
+        className={`grid ${
+          results.isResults
+            ? 'grid-cols-[4rem,3fr,1fr,1.5fr,1fr]'
+            : 'grid-cols-[4rem,3fr,1fr,1.5fr,1fr,4rem,4rem]'
+        } text-base items-center py-2`}
+      >
         <Image alt='icon' src={`/icons/${type}.svg`} width={32} height={32} />
         <span>{name}</span>
-        <div>
-          {!results.isResults && (
+        {!results.isResults && (
+          <div>
             <div className='flex gap-4 items-center'>
               <b>to</b>
               <div
@@ -80,43 +86,47 @@ export default function FileList({
                 <HiMiniChevronDown className='text-lg' />
               </div>
             </div>
-          )}
-          {isFormatShowing && (
-            <div className='relative' ref={ref}>
-              <FormatsContainer
-                className='absolute top-2'
-                setIsFormatShowing={setIsFormatShowing}
-              >
-                <SearchFormats
-                  formats={supportedFormats}
-                  setter={setFilterBySearch}
-                  initState={true}
-                />
-                <div className='grid grid-cols-3'>
-                  {filterBySearch.map((format: string, i: number) => {
-                    return (
-                      <FormatLists
-                        key={i}
-                        to={`${type}-to-${format}`}
-                        onClick={() => handleFormatTo(format)}
-                      >
-                        {format.toUpperCase()}
-                      </FormatLists>
-                    );
-                  })}
-                </div>
-              </FormatsContainer>
-            </div>
-          )}
-        </div>
 
+            {isFormatShowing && (
+              <div className='relative' ref={ref}>
+                <FormatsContainer
+                  className='absolute top-2'
+                  setIsFormatShowing={setIsFormatShowing}
+                >
+                  <SearchFormats
+                    formats={supportedFormats}
+                    setter={setFilterBySearch}
+                    initState={true}
+                  />
+                  <div className='grid grid-cols-3'>
+                    {filterBySearch.map((format: string, i: number) => {
+                      return (
+                        <FormatLists
+                          key={i}
+                          to={`${type}-to-${format}`}
+                          onClick={() => handleFormatTo(format)}
+                        >
+                          {format.toUpperCase()}
+                        </FormatLists>
+                      );
+                    })}
+                  </div>
+                </FormatsContainer>
+              </div>
+            )}
+          </div>
+        )}
         {uploadStarted ? (
           <div className='w-3/4 bg-theme-fontGray rounded-full'>
             <div
-              className={`bg-theme-purpleSecondary text-xs font-medium text-theme-white text-center p-0.5 leading-none rounded-full`}
+              className={`${
+                uploadProgress === 100
+                  ? 'bg-green-500'
+                  : 'bg-theme-purpleSecondary'
+              } text-xs font-medium text-theme-white text-center p-0.5 leading-none rounded-full`}
               style={{ width: `${uploadProgress}%` }}
             >
-              {uploadProgress}%
+              {uploadProgress === 100 ? 'Completed' : `${uploadProgress} %`}
             </div>
           </div>
         ) : (
@@ -136,14 +146,16 @@ export default function FileList({
         <span className='text-sm font-semibold'>
           {!results.isResults ? formatByte(size) : formatByte(results.FileSize)}
         </span>
-        <div>
-          {formatTo && !results.isResults && (
-            <FiSettings
-              onClick={() => setShowModal(true)}
-              className='text-lg'
-            />
-          )}
-        </div>
+        {!results.isResults && (
+          <div>
+            {formatTo && (
+              <FiSettings
+                onClick={() => setShowModal(true)}
+                className='text-lg'
+              />
+            )}
+          </div>
+        )}
         {!results.isResults && (
           <div
             onClick={handleRemoveFile}
@@ -155,7 +167,7 @@ export default function FileList({
 
         {results.isResults && (
           <div>
-            <a href={results.Url}>Download</a>
+            <a href={results.Url}>Download /{results.FileExt}</a>
           </div>
         )}
       </li>

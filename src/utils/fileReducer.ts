@@ -82,6 +82,10 @@ export interface StateType {
   pickedFiles: FileType[];
   isLoading: boolean;
   isError: boolean;
+  fileResults: {
+    isCompleted: boolean;
+    files: string[];
+  };
 }
 
 export function fileReducer(state: StateType, action: ActionType) {
@@ -156,9 +160,16 @@ export function fileReducer(state: StateType, action: ActionType) {
           },
         ];
       }, []);
-      console.log(formatResults);
+
+      const allFileIds = formatResults.map((file: any) => {
+        return { Id: file.file.FileId };
+      });
       return {
         ...state,
+        fileResults: {
+          isCompleted: true,
+          files: allFileIds,
+        },
         pickedFiles: state.pickedFiles.map((file, i) =>
           file.fileUniqueId === formatResults[i].fileUniqueId
             ? {

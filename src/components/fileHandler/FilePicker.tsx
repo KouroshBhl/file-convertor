@@ -12,6 +12,7 @@ import FileList from './FileList';
 import Button from '../ui/Button';
 import Loader from '../ui/Loader';
 import SubmitFiles from './SubmitFiles';
+import DownloadAllFiles from './DownloadAllFiles';
 
 export default function FilePicker() {
   const filePickerRef = useRef<HTMLInputElement>(null);
@@ -99,17 +100,15 @@ export default function FilePicker() {
   }
 
   return (
-    <>
+    <div className='h-1/4 bg-theme-lightGray w-full flex gap-12 flex-col justify-center items-center lg:py-44 md:py-40 py-28'>
       <Toaster />
 
       {state.pickedFiles.length === 0 && (
-        <div className='w-3/5 h-72 bg-theme-white py-8 rounded-2xl border-dashed border-2 border-theme-purplePrimary p-32 flex items-center'>
-          <div className='flex items-center justify-between w-full'>
-            <div>
-              <Button isSelector={true} onClick={handlePickClick}>
-                Choose Files
-              </Button>
-            </div>
+        <div className='lg:w-3/5 md:w-4/5 w-full h-72 bg-theme-white rounded-2xl border-dashed border-2 border-theme-purplePrimary lg:p-32 flex items-center'>
+          <div className='flex items-center justify-between flex-col lg:flex-row w-full gap-10'>
+            <Button isSelector={false} onClick={handlePickClick}>
+              Choose Files
+            </Button>
 
             {state.isLoading ? <Loader /> : <ConversionFormatsGroup />}
           </div>
@@ -117,7 +116,7 @@ export default function FilePicker() {
       )}
 
       {state.pickedFiles.length !== 0 && (
-        <ul className='flex flex-col gap-4 bg-theme-white w-3/5 p-6 rouded'>
+        <ul className='flex flex-col gap-4 bg-theme-white lg:w-4/5 2xl:w-3/5 p-6 rouded w-full'>
           {state.pickedFiles.map((item, i) => {
             const {
               supported: supportedFormats,
@@ -158,7 +157,7 @@ export default function FilePicker() {
         onChange={handlePickedFile}
       />
 
-      {state.pickedFiles.length > 0 && (
+      {state.pickedFiles.length > 0 && !state.fileResults.isCompleted && (
         <div className='flex justify-between items-center w-3/5'>
           <Button isSelector={true} onClick={handlePickClick}>
             Add More Files
@@ -167,6 +166,8 @@ export default function FilePicker() {
           <SubmitFiles />
         </div>
       )}
-    </>
+
+      {state.fileResults.isCompleted && <DownloadAllFiles />}
+    </div>
   );
 }

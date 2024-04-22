@@ -7,6 +7,7 @@ import { getAllConversions } from '@/utils/actions';
 import FormatsContainer from './FormatsContainer';
 import ConversionPickup from './ConversionPickup';
 import { useDetectOutside } from '@/utils/hooks/useDetectMouseOutside';
+import FormatSpecific from '../ui/FormatSpecific';
 
 export default function ConversionFormatsGroup() {
   const [allFormats, setAllFormats] = useState([]);
@@ -54,13 +55,13 @@ export default function ConversionFormatsGroup() {
   const uniqueGroup = [...new Set(groups)];
 
   return (
-    <div className='flex gap-4 items-center'>
+    <div className='flex gap-4 justify-center items-center  w-4/5 sm:w-2/5'>
       <div className='flex flex-col relative '>
         <div
           onClick={handleShowFrom}
           className='flex justify-center items-center gap-2 cursor-pointer bg-theme-lightGray_2 rounded px-4 py-2'
         >
-          <b>{fromFormatDetect.toUpperCase()}</b>
+          <FormatSpecific>{fromFormatDetect.toUpperCase()}</FormatSpecific>
           <HiMiniChevronDown />
         </div>
         {showFrom && (
@@ -72,13 +73,13 @@ export default function ConversionFormatsGroup() {
           />
         )}
       </div>
-      <b>to</b>
+      <FormatSpecific>to</FormatSpecific>
       <div className='flex flex-col relative '>
         <div
           onClick={handleShowTo}
           className='flex justify-center items-center gap-2 cursor-pointer bg-theme-lightGray_2 rounded px-4 py-2'
         >
-          <b>{toFormatDetect.toUpperCase()}</b>
+          <FormatSpecific>{toFormatDetect.toUpperCase()}</FormatSpecific>
           <HiMiniChevronDown />
         </div>
 
