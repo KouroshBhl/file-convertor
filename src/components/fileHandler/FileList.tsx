@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import { IoMdClose } from 'react-icons/io';
 import { FiSettings } from 'react-icons/fi';
@@ -38,7 +38,8 @@ export default function FileList({
   const [filterBySearch, setFilterBySearch] = useState(supportedFormats);
   const [isFormatShowing, setIsFormatShowing] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const ref = useDetectOutside(setIsFormatShowing);
+  const helpRef = useRef(null);
+  const ref = useDetectOutside(setIsFormatShowing, true, helpRef);
 
   if (!file) return;
   const { name, size } = file;
@@ -72,7 +73,12 @@ export default function FileList({
             : 'grid-cols-[4rem,3fr,1fr,1.5fr,1fr,4rem,4rem]'
         } text-base items-center py-2`}
       >
-        <Image alt='icon' src={`/icons/${type}.svg`} width={32} height={32} />
+        <Image
+          alt='icon'
+          src={`/static/icons/${type}.svg`}
+          width={32}
+          height={32}
+        />
         <span>{name}</span>
         {!results.isResults && (
           <div>
@@ -81,6 +87,7 @@ export default function FileList({
               <div
                 className='bg-theme-lightGray_2 px-2 py-1 rounded font-semibold text-sm flex justify-center items-center gap-1 hover:cursor-pointer'
                 onClick={() => setIsFormatShowing((prev) => !prev)}
+                ref={helpRef}
               >
                 <b>{formatTo ? formatTo.toLocaleUpperCase() : '...'}</b>
                 <HiMiniChevronDown className='text-lg' />

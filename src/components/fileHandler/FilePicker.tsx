@@ -159,7 +159,7 @@ export default function FilePicker() {
 
       {state.pickedFiles.length > 0 && !state.fileResults.isCompleted && (
         <div className='flex justify-between items-center w-3/5'>
-          <Button isSelector={true} onClick={handlePickClick}>
+          <Button isSelector={false} onClick={handlePickClick}>
             Add More Files
           </Button>
 

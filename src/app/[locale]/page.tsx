@@ -1,4 +1,5 @@
 import Heading from '@/components/ui/Heading';
+import MegaMenu from '@/components/ui/MegaMenu';
 
 export default function Home() {
   // const t = useTranslations('Index');

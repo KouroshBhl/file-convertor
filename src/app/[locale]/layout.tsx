@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang={locale}>
       <body
-        className={`${plusJakarta.className} text-theme-fontDark font-normal fixed w-full`}
+        className={`${plusJakarta.className} text-theme-fontDark font-normal w-full`}
       >
         <Header />
 

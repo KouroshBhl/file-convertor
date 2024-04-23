@@ -1,0 +1,57 @@
+[
+  {
+    "header": "PDF Tools",
+    "icon": "pdf",
+    "items": [
+      { "name": "Merge PDF", "link": "pdf-to-merge" },
+      { "name": "Split PDF", "link": "pdf-to-split" },
+      { "name": "Compress PDF", "link": "pdf-to-compress" },
+      { "name": "Protect PDF", "link": "pdf-to-merge" },
+      { "name": "Add watermark to PDF", "link": "pdf-to-merge" }
+    ]
+  },
+
+  {
+    "header": "Image Tools",
+    "icon": "svg",
+    "items": [
+      { "name": "JPG to PDF", "link": "pdf-to-png" },
+      { "name": "PNG to PDF", "link": "pdf-to-png" },
+      { "name": "SVG to PDF", "link": "pdf-to-png" },
+      { "name": "PNG to PNG", "link": "pdf-to-png" },
+      { "name": "PDF to PNG", "link": "pdf-to-png" }
+    ]
+  },
+  {
+    "header": "Apple iwork",
+    "icon": "svg",
+    "items": [
+      { "name": "Pages to PDF", "link": "pdf-to-png" },
+      { "name": "Numbers to PDF", "link": "pdf-to-png" },
+      { "name": "KEY to PDF", "link": "pdf-to-png" },
+      { "name": "DOCX to Pages", "link": "pdf-to-png" },
+      { "name": "Numbers to XLSX", "link": "pdf-to-png" }
+    ]
+  },
+  {
+    "header": "MS Office",
+    "icon": "svg",
+    "items": [
+      { "name": "DOCX to PDF", "link": "pdf-to-png" },
+      { "name": "XLSX to PDF", "link": "pdf-to-png" },
+      { "name": "PPTX to PDF", "link": "pdf-to-png" },
+      { "name": "XLS to CSV", "link": "pdf-to-png" },
+      { "name": "Compare DOCX", "link": "pdf-to-png" }
+    ]
+  },
+  {
+    "header": "Email Tools",
+    "icon": "svg",
+    "items": [
+      { "name": "EML to PDF", "link": "pdf-to-png" },
+      { "name": "MSG to PDF", "link": "pdf-to-png" },
+      { "name": "EML to PNG", "link": "pdf-to-png" },
+      { "name": "MSG to PNG", "link": "pdf-to-png" }
+    ]
+  }
+]
